@@ -170,7 +170,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
     public static void createGame(GameEngine game) {
         // Call CreateGame
-        createGame(game, 30);
+        createGame(game, 50);
     }
 
     // Game Timer

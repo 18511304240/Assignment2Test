@@ -20,7 +20,19 @@ public class RunningMario_completed extends GameEngine {
         int y;
         int type;
 
-        public Obstacle(int x,int y,int type){
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public Obstacle(int x, int y, int type){
             this.x = x;
             this.y = y;
 
@@ -33,6 +45,8 @@ public class RunningMario_completed extends GameEngine {
             }else if(type == 3){
                 drawImage(Tube,x,y,80,80);
             }
+
+
         }
 
 
@@ -51,6 +65,7 @@ public class RunningMario_completed extends GameEngine {
     int upTime;
     double animTime;
     List<Obstacle> blockList = new ArrayList<>();
+    Obstacle tempObstacle;
     //-------------------------------------------------------
     // Game
     //-------------------------------------------------------
@@ -83,12 +98,37 @@ public class RunningMario_completed extends GameEngine {
 
 
     }
-//    public void drawMario(){
-//        if(is_Flying || is_jump){
-//            drawImage(jumpMario,pos.getX());
-//        }
-//    }
 
+    //collision Check
+    public void checkCollision(){
+        for(Obstacle s:blockList){
+            if (s.getType() == 3){
+                if(pos.getX() + 40 == s.getX()&& s.getY() < pos.getY() + 40){
+                    is_right = false;
+                    break;
+                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() - (pos.getY() + 40) == 3){
+                    on_obstacle = true;
+                    tempObstacle = s;
+                    break;
+                }else if(pos.getX() == s.getX() + 80 && s.getY() < pos.getY() + 40){
+                    is_left = false;
+                    break;
+                }
+            }
+        }
+
+        if(on_obstacle && (pos.getX() > tempObstacle.getX() +80)){
+            on_obstacle = false;
+            is_Flying = true;
+        } else if(on_obstacle && (pos.getX()+40) < tempObstacle.getX()){
+            System.out.println(pos.getX());
+            System.out.println(tempObstacle.getX());
+            on_obstacle = false;
+            is_Flying = true;
+        }else  if(is_jump){
+            on_obstacle = false;
+        }
+    }
     // Initialise the Game
     public void init() {
         upV = 10;
@@ -121,14 +161,14 @@ public class RunningMario_completed extends GameEngine {
         // Update Function
         animTime += dt;
 
-
+        checkCollision();
         //currentFrame = (currentFrame + 1) % 3;
         if(is_moving) {
             if(is_left)
             {
                 pos.setLocation(pos.getX()-10,pos.getY());
             }
-            else
+            if (is_right)
             {
                 pos.setLocation(pos.getX()+10,pos.getY());
             }
@@ -141,7 +181,6 @@ public class RunningMario_completed extends GameEngine {
             }
 
             currentFrame = getFrame(0.3, 4);
-            System.out.println(getFrame(0.3,4));
         }
         else
         {
@@ -159,9 +198,14 @@ public class RunningMario_completed extends GameEngine {
             }
         }
 
-        if(is_Flying){
+        if (on_obstacle) {
+            is_Flying = false;
+        }
+
+        if(is_Flying && !is_jump) {
             upTime = 0;
-            if (groundPosition%pos.getY() < 5){
+
+            if (groundPosition % pos.getY() < 5) {
                 is_Flying = false;
             }else {
                 pos.setLocation(pos.getX(),pos.getY()+upV);
@@ -266,10 +310,12 @@ public class RunningMario_completed extends GameEngine {
     Point2D obstaclePos= new Point2D.Double();
     boolean is_moving = false;
     boolean is_left = false;
+    boolean is_right = false;
     boolean is_center = false;
     boolean is_jump = false;
     boolean is_Flying = false;
-    int upV,downV;
+    boolean on_obstacle = false;
+    int upV;
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -278,17 +324,20 @@ public class RunningMario_completed extends GameEngine {
         {
             is_moving = true;
             is_left = false;
+            is_right = true;
 
         }
         else if (e.getKeyCode() == KeyEvent.VK_LEFT)
         {
             is_moving = true;
             is_left = true;
+            is_right = false;
         }
 
         if(e.getKeyCode() == KeyEvent.VK_UP){
             if(!is_Flying){
                 is_jump = true;
+                is_Flying = true;
             }
         }
     }
