@@ -27,11 +27,11 @@ public class RunningMario_completed extends GameEngine {
             this.type = type;
 
             if(type == 1) {
-                drawImage(block,x,y,32,32);
+                drawImage(block,x,y,40,40);
             }else if(type == 2){
-                drawImage(blockQuestion[currentFrame],x,y,32,32);
+                drawImage(blockQuestion[getFrame(1,3)],x,y,40,40);
             }else if(type == 3){
-                drawImage(Tube,35,35);
+                drawImage(Tube,x,y,80,80);
             }
         }
 
@@ -58,6 +58,30 @@ public class RunningMario_completed extends GameEngine {
     //draw and design the level
     public void designObstacle(){
         blockList.add(new Obstacle(100,50,1));
+        blockList.add(new Obstacle(350,390,1));
+        blockList.add(new Obstacle(390,230,1));
+        blockList.add(new Obstacle(430,230,2));
+        blockList.add(new Obstacle(470,230,1));
+        blockList.add(new Obstacle(510,230,2));
+        blockList.add(new Obstacle(550,475,3));
+        blockList.add(new Obstacle(650,390,1));
+        blockList.add(new Obstacle(690,390,2));
+        blockList.add(new Obstacle(730,390,1));
+        blockList.add(new Obstacle(770,390,2));
+        blockList.add(new Obstacle(810,390,1));
+
+        blockList.add(new Obstacle(890,230,2));
+        blockList.add(new Obstacle(970,230,2));
+        blockList.add(new Obstacle(1050,230,2));
+        blockList.add(new Obstacle(850,390,1));
+        blockList.add(new Obstacle(950,475,3));
+        blockList.add(new Obstacle(1050,390,1));
+
+        blockList.add(new Obstacle(1140,390,1));
+        blockList.add(new Obstacle(1220,390,2));
+        blockList.add(new Obstacle(1300,390,2));
+
+
     }
 //    public void drawMario(){
 //        if(is_Flying || is_jump){
@@ -67,7 +91,7 @@ public class RunningMario_completed extends GameEngine {
 
     // Initialise the Game
     public void init() {
-        downV = 5;
+        upV = 10;
         frames = new Image[4];
         blockQuestion = new Image[3];
         sheet = loadImage("miniMario.png");
@@ -83,7 +107,7 @@ public class RunningMario_completed extends GameEngine {
         }
 
         jumpMario = subImage(sheet,80,0,16,16);
-        groundPosition = 551 - 32;
+        groundPosition = 550 - 38;
         pos.setLocation(100,groundPosition);
 
         obstaclePos.setLocation(100,100);
@@ -126,7 +150,7 @@ public class RunningMario_completed extends GameEngine {
 
         if(is_jump) {
             pos.setLocation(pos.getX(),pos.getY()-upV);
-            if(upTime == 10){
+            if(upTime == 16){
                 is_jump = false;
                 upTime = 0;
                 is_Flying = true;
@@ -170,9 +194,9 @@ public class RunningMario_completed extends GameEngine {
                 drawImage(background, 0, 0, 10500, 645);
                 designObstacle();
                 if(is_Flying || is_jump){
-                    drawImage(jumpMario,pos.getX() + 16 * 2 , pos.getY(), -16 * 2, 16 * 2);
+                    drawImage(jumpMario,pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
                 }else {
-                    drawImage(frames[currentFrame], pos.getX() + 16 * 2 , pos.getY(), -16 * 2, 16 * 2);
+                    drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
                 }
 
 
@@ -188,9 +212,9 @@ public class RunningMario_completed extends GameEngine {
 
                 restoreLastTransform();
                 if(is_Flying || is_jump){
-                    drawImage(jumpMario, 250 + 16*2, pos.getY(), -16 * 2, 16 * 2);
+                    drawImage(jumpMario, 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
                 }else {
-                    drawImage(frames[currentFrame], 250 + 16*2, pos.getY(), -16 * 2, 16 * 2);
+                    drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
                 }
 
                 if(pos.getX() <= 250){
@@ -207,9 +231,9 @@ public class RunningMario_completed extends GameEngine {
                 drawImage(block,obstaclePos.getX(),obstaclePos.getY());
                 designObstacle();
                 if(is_Flying || is_jump){
-                    drawImage(jumpMario, pos.getX(), pos.getY(), 16 * 2, 16 * 2);
+                    drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
                 }else {
-                    drawImage(frames[currentFrame], pos.getX(), pos.getY(), 16 * 2, 16 * 2);
+                    drawImage(frames[currentFrame], pos.getX(), pos.getY(), 20 * 2, 20 * 2);
                 }
 
                 if(pos.getX() >= 250)
@@ -228,9 +252,9 @@ public class RunningMario_completed extends GameEngine {
                 designObstacle();
                 restoreLastTransform();
                 if(is_Flying || is_jump){
-                    drawImage(jumpMario,250, pos.getY(), 16 * 2, 16 * 2);
+                    drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
                 }else {
-                    drawImage(frames[currentFrame], 250, pos.getY(), 16 * 2, 16 * 2);
+                    drawImage(frames[currentFrame], 250, pos.getY(), 20 * 2, 20 * 2);
                 }
 
 
@@ -265,7 +289,6 @@ public class RunningMario_completed extends GameEngine {
         if(e.getKeyCode() == KeyEvent.VK_UP){
             if(!is_Flying){
                 is_jump = true;
-                upV = 8;
             }
         }
     }
