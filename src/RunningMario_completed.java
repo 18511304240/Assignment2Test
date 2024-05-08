@@ -30,6 +30,8 @@ public class RunningMario_completed extends GameEngine {
                 drawImage(block,x,y,32,32);
             }else if(type == 2){
                 drawImage(blockQuestion[currentFrame],x,y,32,32);
+            }else if(type == 3){
+                drawImage(Tube,35,35);
             }
         }
 
@@ -43,7 +45,7 @@ public class RunningMario_completed extends GameEngine {
     Image background;
     Image[] frames,blockQuestion;
     Image jumpMario;
-    Image block;
+    Image block,Tube;
     int groundPosition;
     int currentFrame;
     int upTime;
@@ -71,6 +73,7 @@ public class RunningMario_completed extends GameEngine {
         sheet = loadImage("miniMario.png");
         sheet2 = loadImage("Obstacle.png");
         background = loadImage("MarioBackground.png");
+        Tube = subImage(sheet2,0,145,35,35);
         for (int i = 0; i < 4; i++) {
             frames[i] = subImage(sheet,16*i,0,16,16);
         }
@@ -122,23 +125,22 @@ public class RunningMario_completed extends GameEngine {
         }
 
         if(is_jump) {
+            pos.setLocation(pos.getX(),pos.getY()-upV);
             if(upTime == 10){
                 is_jump = false;
                 upTime = 0;
                 is_Flying = true;
             }else {
-                pos.setLocation(pos.getX(),pos.getY()-upV);
                 upTime+=1;
             }
         }
 
         if(is_Flying){
-
-
-            pos.setLocation(pos.getX(),pos.getY()+upV);
-
-            if (pos.getY() == groundPosition){
+            upTime = 0;
+            if (groundPosition%pos.getY() < 5){
                 is_Flying = false;
+            }else {
+                pos.setLocation(pos.getX(),pos.getY()+upV);
             }
 
         }
@@ -261,8 +263,10 @@ public class RunningMario_completed extends GameEngine {
         }
 
         if(e.getKeyCode() == KeyEvent.VK_UP){
-            is_jump = true;
-            upV = 8;
+            if(!is_Flying){
+                is_jump = true;
+                upV = 8;
+            }
         }
     }
 
@@ -274,6 +278,11 @@ public class RunningMario_completed extends GameEngine {
         }
         else if (e.getKeyCode() == KeyEvent.VK_LEFT){
             is_moving = false;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_UP){
+            is_jump = false;
+            is_Flying = true;
         }
 
     }
