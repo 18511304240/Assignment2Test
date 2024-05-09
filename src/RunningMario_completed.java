@@ -73,7 +73,7 @@ public class RunningMario_completed extends GameEngine {
     //draw and design the level
     public void designObstacle(){
         blockList.add(new Obstacle(100,50,1));
-        blockList.add(new Obstacle(350,390,1));
+        blockList.add(new Obstacle(350,450,1));
         blockList.add(new Obstacle(390,230,1));
         blockList.add(new Obstacle(430,230,2));
         blockList.add(new Obstacle(470,230,1));
@@ -106,7 +106,7 @@ public class RunningMario_completed extends GameEngine {
                 if(pos.getX() + 40 == s.getX()&& s.getY() < pos.getY() + 40){
                     is_right = false;
                     break;
-                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() - (pos.getY() + 40) == 3){
+                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() % (pos.getY() + 40) <10){
                     on_obstacle = true;
                     tempObstacle = s;
                     break;
@@ -114,27 +114,95 @@ public class RunningMario_completed extends GameEngine {
                     is_left = false;
                     break;
                 }
-            }if(s.getType() == 1 || s.getType() == 2){
-                if(pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()){
-                    is_right = false;
-                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)){
-                    is_jump = false;
-                    is_Flying = true;
-                }
+            }
+//            if (s.getType() == 1) { // 检测类型为 1 的障碍物
+//                // 玩家角色的位置信息
+//                double playerBottom = pos.getY() + 40; // 玩家角色底部的位置
+//                double playerRight = pos.getX() + 40; // 玩家角色右侧的位置
+//                double playerTop = pos.getY(); // 玩家角色顶部的位置
+//                double playerLeft = pos.getX(); // 玩家角色左侧的位置
+//
+//                // 障碍物的位置信息
+//                double obstacleBottom = s.getY() + 40; // 障碍物底部的位置
+//                double obstacleRight = s.getX() + 40; // 障碍物右侧的位置
+//                double obstacleTop = s.getY(); // 障碍物顶部的位置
+//                double obstacleLeft = s.getX(); // 障碍物左侧的位置
+//
+//                // 检测碰撞
+//                boolean collidesBottom = playerBottom >= obstacleTop && playerTop < obstacleTop && playerRight > obstacleLeft && playerLeft < obstacleRight;
+//                boolean collidesTop = playerTop <= obstacleBottom && playerBottom > obstacleBottom && playerRight > obstacleLeft && playerLeft < obstacleRight;
+//                boolean collidesRight = playerRight >= obstacleLeft && playerLeft < obstacleLeft && playerTop < obstacleBottom && playerBottom > obstacleTop;
+//                boolean collidesLeft = playerLeft <= obstacleRight && playerRight > obstacleRight && playerTop < obstacleBottom && playerBottom > obstacleTop;
+//
+//                // 处理碰撞
+////                if (collidesBottom || collidesTop || collidesRight || collidesLeft) {
+////                    is_moving = false; // 停止移动
+////                    break; // 跳出循环
+////                }
+//                if (collidesRight){
+//                    is_right = false;
+//                    break;
+//                } else if (collidesLeft) {
+//                    is_left = false;
+//                    break;
+//                } else if (pos.getY() < s.getY() + 40 && pos.getX()+40 > s.getX() && pos.getX() < s.getX()+40 ) {
+//                    is_jump = false;
+//                    is_Flying = true;
+//                    break;
+//
+//                } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && s.getY() - (pos.getY() + 40) == 3) {
+//                    on_obstacle = true;
+//                    tempObstacle = s;
+//                    break;
+//                }
+//            }
+            if(s.getType() == 1 || s.getType() == 2){
+                    if(pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()){
+                        is_right = false;
+                    } else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)){
+                        is_jump = false;
+                        is_Flying = true;
+                    } else if (pos.getY() < s.getY()+40 && pos.getY() > s.getY() - 40 && pos.getX() == s.getX() + 40){
+                        is_left = false;
+                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && s.getY() % (pos.getY() + 40) <10 ) {
+                        on_obstacle = true;
+                        tempObstacle = s;
+                        System.out.println(s.getY() - (pos.getY() + 40));
+
+
+                    }
             }
         }
+        if (on_obstacle) {
+            if(tempObstacle.getType() == 3){
+                if ((pos.getX() > tempObstacle.getX() + 80)) {
+                    on_obstacle = false;
+                    is_Flying = true;
+                } else if ((pos.getX() + 40) < tempObstacle.getX()) {
+                    System.out.println(pos.getX());
+                    System.out.println(tempObstacle.getX());
+                    on_obstacle = false;
+                    is_Flying = true;
+                } else if (is_jump) {
+                    on_obstacle = false;
+                }
+            }else if(tempObstacle.getType() == 1 || tempObstacle.getType() == 2){
+                if ((pos.getX() > tempObstacle.getX() + 40)) {
+                    on_obstacle = false;
+                    is_Flying = true;
+                } else if ((pos.getX() + 40) < tempObstacle.getX()) {
+                    System.out.println(pos.getX());
+                    System.out.println(tempObstacle.getX());
+                    on_obstacle = false;
+                    is_Flying = true;
+                } else if (is_jump) {
+                    on_obstacle = false;
+                }
+            }
 
-        if(on_obstacle && (pos.getX() > tempObstacle.getX() +80)){
-            on_obstacle = false;
-            is_Flying = true;
-        } else if(on_obstacle && (pos.getX()+40) < tempObstacle.getX()){
-            System.out.println(pos.getX());
-            System.out.println(tempObstacle.getX());
-            on_obstacle = false;
-            is_Flying = true;
-        }else  if(is_jump){
-            on_obstacle = false;
         }
+
+
     }
     // Initialise the Game
     public void init() {
@@ -207,13 +275,15 @@ public class RunningMario_completed extends GameEngine {
 
         if (on_obstacle) {
             is_Flying = false;
+            pos.setLocation(pos.getX(),tempObstacle.getY()-40);
         }
 
         if(is_Flying && !is_jump) {
             upTime = 0;
 
-            if (groundPosition % pos.getY() < 5) {
+            if (groundPosition % pos.getY() < 10) {
                 is_Flying = false;
+                pos.setLocation(pos.getX(),groundPosition);
             }else {
                 pos.setLocation(pos.getX(),pos.getY()+upV);
             }
@@ -222,6 +292,10 @@ public class RunningMario_completed extends GameEngine {
 
 
     }
+
+
+
+
 
     // Calculates the
     public int getFrame(double d, int num_frames) {
