@@ -1,7 +1,9 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +59,7 @@ public class RunningMario_completed extends GameEngine {
     //-------------------------------------------------------
     Image sheet,sheet2;
     Image background;
+    Image mogu1,mogu2,mogu3,bird1,bird2,flower1,flower2;
     Image[] frames,blockQuestion;
     Image jumpMario;
     Image block,Tube;
@@ -64,8 +67,12 @@ public class RunningMario_completed extends GameEngine {
     int currentFrame;
     int upTime;
     double animTime;
+    double timeElapsed;
     List<Obstacle> blockList = new ArrayList<>();
+    //    用于存放我们所有的敌人
+    private List<Enemy>enemyList=new ArrayList<>();
     Obstacle tempObstacle;
+    private int e = 1;
     //-------------------------------------------------------
     // Game
     //-------------------------------------------------------
@@ -204,6 +211,12 @@ public class RunningMario_completed extends GameEngine {
 
 
     }
+
+    public void paintenemy(){
+        for (Enemy enemy : enemyList) {
+            drawImage(enemy.getShow(), enemy.getX(), enemy.getY());
+        }
+    }
     // Initialise the Game
     public void init() {
         upV = 10;
@@ -226,8 +239,65 @@ public class RunningMario_completed extends GameEngine {
         pos.setLocation(100,groundPosition);
 
         obstaclePos.setLocation(100,100);
+        mogu1 = loadImage("images/fungus1.png");
+        mogu2 = loadImage("images/fungus2.png");
+        mogu3 = loadImage("images/fungus3.png");
+        bird1 = loadImage("images/bird1.png");
+        bird2 = loadImage("images/bird2.png");
+        flower1 = loadImage("images/flower1.1.png");
+        flower2 = loadImage("images/flower1.2.png");
+        //加载蘑菇敌人
+        for (int i = 1; i <= 3; i++) {
+            try {
+                Image image;
+                if (i == 3) {
+                    image = mogu3;
+                } else if (i == 1) {
+                    image = mogu1;
+                } else {
+                    image = mogu2;
+                }
+                Enemy.mogu.add(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //加载鸟敌人
+        for (int i = 1; i <= 2; i++){
+            try {
+                Image image;
+                if (i == 1) {
+                    image = bird1;
+                } else {
+                    image = bird2;
+                }
+                Enemy.bird.add(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //        加载食人花敌人
+        for (int i = 1; i <= 2; i++) {
+            try {
+                Image image;
+                if (i == 1) {
+                    image = flower1;
+                } else {
+                    image = flower2;
+                }
+                Enemy.flower.add(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        enemyList.add(new Enemy(500,450,true,2,360,450));
+        enemyList.add(new Enemy(580,520,true,1));
+        enemyList.add(new Enemy(580,300,true,3));
+//        enemyList.add(new Enemy(670,520,true,1));
 
     }
+
+
 
 
     // Updates the display
@@ -238,27 +308,21 @@ public class RunningMario_completed extends GameEngine {
 
         checkCollision();
         //currentFrame = (currentFrame + 1) % 3;
-        if(is_moving) {
-            if(is_left)
-            {
-                pos.setLocation(pos.getX()-10,pos.getY());
+        if (is_moving) {
+            if (is_left) {
+                pos.setLocation(pos.getX() - 10, pos.getY());
             }
-            if (is_right)
-            {
-                pos.setLocation(pos.getX()+10,pos.getY());
+            if (is_right) {
+                pos.setLocation(pos.getX() + 10, pos.getY());
             }
 
 
-
-            if(pos.getX()<0)
-            {
-                pos.setLocation(0,pos.getY());
+            if (pos.getX() < 0) {
+                pos.setLocation(0, pos.getY());
             }
 
             currentFrame = getFrame(0.3, 4);
-        }
-        else
-        {
+        } else {
             currentFrame = 0;
         }
 
@@ -290,8 +354,17 @@ public class RunningMario_completed extends GameEngine {
 
         }
 
-
+            for (Enemy enemy : enemyList) {
+                int currentX = enemy.getX();
+                if (currentX < 650) {
+                    enemy.setX(650);
+                } else if (currentX > 1000) {
+                    enemy.setX(1000);
+                }
+            }
     }
+
+
 
 
 
@@ -334,6 +407,9 @@ public class RunningMario_completed extends GameEngine {
 //                System.out.println(-pos.getX()+250);
                 drawImage(background, 0, 0, 10500, 645);
                 designObstacle();
+                    paintenemy();
+                timeElapsed++;
+
 
                 restoreLastTransform();
                 if(is_Flying || is_jump){
@@ -375,6 +451,7 @@ public class RunningMario_completed extends GameEngine {
                 drawImage(block,obstaclePos.getX(),obstaclePos.getY());
                 drawImage(blockQuestion[getFrame(1,3)],200,50,32,32);
                 designObstacle();
+                    paintenemy();
                 restoreLastTransform();
                 if(is_Flying || is_jump){
                     drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
