@@ -114,6 +114,13 @@ public class RunningMario_completed extends GameEngine {
                     is_left = false;
                     break;
                 }
+            }if(s.getType() == 1 || s.getType() == 2){
+                if(pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()){
+                    is_right = false;
+                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)){
+                    is_jump = false;
+                    is_Flying = true;
+                }
             }
         }
 
