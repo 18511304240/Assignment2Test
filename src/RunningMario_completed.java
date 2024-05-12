@@ -106,6 +106,10 @@ public class RunningMario_completed extends GameEngine {
         public void setLive(boolean live) {
             isLive = live;
         }
+
+        public boolean isLive() {
+            return isLive;
+        }
     }
 
     public void designEnemy(){
@@ -113,24 +117,22 @@ public class RunningMario_completed extends GameEngine {
         enemyTests.add(new EnemyTest(700,groundPosition,1,2,false));
     }
 
-    int dieTime = 100;
+    int dieTime = 40;
     public void drawEnemy(){
         for(int i = 0,len = enemyTests.size();i < len;i++){
             if (enemyTests.get(i).isLive) {
                 enemyTests.get(i).run();
-                drawImage(Chestnut[getFrame(1,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                drawImage(Chestnut[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
             }else {
                 if(dieTime == 0){
                     enemyTests.remove(enemyTests.get(i));
                     len--;
                     i--;
-                    dieTime = 100;
+                    dieTime = 40;
                 }else {
-                    drawImage(ChestnutDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY() + 20,40,20);
+                    drawImage(ChestnutDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY() + 25,40,15);
                     dieTime--;
                 }
-
-
             }
         }
 
@@ -205,7 +207,7 @@ public class RunningMario_completed extends GameEngine {
                 if(pos.getX() + 40 == s.getX()&& s.getY() < pos.getY() + 40){
                     is_right = false;
                     break;
-                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() - (pos.getY() + 40) == 3){
+                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() % (pos.getY() + 40) < 10){
                     on_obstacle = true;
                     tempObstacle = s;
                     System.out.println("makabaka");
@@ -228,6 +230,7 @@ public class RunningMario_completed extends GameEngine {
             }
         }
 
+
         if(on_obstacle && (pos.getX() > tempObstacle.getX() +80)){
             on_obstacle = false;
             is_Flying = true;
@@ -238,13 +241,14 @@ public class RunningMario_completed extends GameEngine {
             on_obstacle = false;
         }
 
+
         for(int i = 0, len = enemyTests.size();i < len;i++){
             if(is_Flying && enemyTests.get(i).getY() %(pos.getY() + 40)<15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40 ){
-                enemyTests.get(i).setLive(false);
-                enemyTests.remove(i);
-                len--;
-                i--;
-                rebound = true;
+                if(enemyTests.get(i).isLive){
+                    rebound = true;
+                    enemyTests.get(i).setLive(false);
+                }
+
             }
         }
 
@@ -253,6 +257,9 @@ public class RunningMario_completed extends GameEngine {
 
     // Initialise the Game
     public void init() {
+        setWindowSize(800,645);
+
+
         upV = 10;
         frames = new Image[4];
         blockQuestion = new Image[3];
@@ -342,7 +349,7 @@ public class RunningMario_completed extends GameEngine {
 
         if (is_Flying && !is_jump && !rebound) {
             upTime = 0;
-            if (groundPosition % pos.getY() < 10) {
+            if (groundPosition - pos.getY() < 10) {
                 is_Flying = false;
                 rebound = false;
                 pos.setLocation(pos.getX(),groundPosition);
@@ -367,7 +374,7 @@ public class RunningMario_completed extends GameEngine {
     public void paintComponent() {
         // Clear the background to black
         changeBackgroundColor(Color.white);
-        clearBackground(500, 500);
+        clearBackground(width(),height());
 
 
 
