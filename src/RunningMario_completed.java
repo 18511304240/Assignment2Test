@@ -133,6 +133,8 @@ public class RunningMario_completed extends GameEngine {
                     drawImage(ChestnutDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY() + 25,40,15);
                     dieTime--;
                 }
+
+
             }
         }
 
@@ -163,12 +165,12 @@ public class RunningMario_completed extends GameEngine {
     public void designObstacle(){
         blockList.add(new Obstacle(100,50,1));
         blockList.add(new Obstacle(350,390,1));
-        blockList.add(new Obstacle(390,230,1));
+        blockList.add(new Obstacle(390,390,1));
         blockList.add(new Obstacle(430,230,2));
         blockList.add(new Obstacle(470,230,1));
         blockList.add(new Obstacle(510,230,2));
         blockList.add(new Obstacle(550,475,3));
-        blockList.add(new Obstacle(650,390,1));
+        blockList.add(new Obstacle(650,230,1));
         blockList.add(new Obstacle(690,390,2));
         blockList.add(new Obstacle(730,390,1));
         blockList.add(new Obstacle(770,390,2));
@@ -178,12 +180,52 @@ public class RunningMario_completed extends GameEngine {
         blockList.add(new Obstacle(970,230,2));
         blockList.add(new Obstacle(1050,230,2));
         blockList.add(new Obstacle(850,390,1));
-        blockList.add(new Obstacle(950,475,3));
+        blockList.add(new Obstacle(1500,475,3));
+//        blockList.add(new Obstacle(1150,500,1));
         blockList.add(new Obstacle(1050,390,1));
 
         blockList.add(new Obstacle(1140,390,1));
         blockList.add(new Obstacle(1220,390,2));
         blockList.add(new Obstacle(1300,390,2));
+//三管道第一关
+        blockList.add(new Obstacle(1500,475,3));
+        blockList.add(new Obstacle(1800,475,3));
+        blockList.add(new Obstacle(2100,475,3));
+
+        blockList.add(new Obstacle(2200,350,1));
+        blockList.add(new Obstacle(2400,450,1));
+        blockList.add(new Obstacle(2500,350,1));
+        blockList.add(new Obstacle(2540,350,1));
+        blockList.add(new Obstacle(2580,350,2));
+//        blockList.add(new Obstacle(2700,230,1));
+        for (int i=0;i<5;i++){
+            blockList.add(new Obstacle(2700+i*40,230,1));
+        }
+        blockList.add(new Obstacle(2900,230,2));
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(3000+i*40,390,1));
+        }
+        blockList.add(new Obstacle(3300,390,2));
+        blockList.add(new Obstacle(3400,5155,3));
+        for (int i=0;i<5;i++){
+            int yy=515-i*40;
+            int xx=3800+i*40;
+            for (int j=5;j>=0;j--){
+                blockList.add(new Obstacle(xx+j*40,yy,4));
+
+            }
+
+        }
+        for (int i=0;i<5;i++){
+            int yy=355+i*40;
+            int xx=4500-i*40;
+            for (int j=0;j<=i;j++){
+                blockList.add(new Obstacle(xx+j*40,yy,4));
+
+            }
+
+        }
+
     }
 
     public void drawObstacle(){
@@ -202,7 +244,8 @@ public class RunningMario_completed extends GameEngine {
 
     //collision Check
     public void checkCollision(){
-        for(Obstacle s:blockList){
+        for(int i = 0; i < blockList.size(); i++){
+            Obstacle s = blockList.get(i);
             if (s.getType() == 3){
                 if(pos.getX() + 40 == s.getX()&& s.getY() < pos.getY() + 40){
                     is_right = false;
@@ -210,37 +253,65 @@ public class RunningMario_completed extends GameEngine {
                 }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() % (pos.getY() + 40) < 10){
                     on_obstacle = true;
                     tempObstacle = s;
-                    System.out.println("makabaka");
                     break;
                 }else if(pos.getX() == s.getX() + 80 && s.getY() < pos.getY() + 40){
                     is_left = false;
                     break;
                 }
-            }if(s.getType() == 1 || s.getType() == 2){
+            }
+
+            if(s.getType() == 1 || s.getType() == 2 || s.getType() == 4){
                 if(pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()){
                     is_right = false;
-                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)){
-                    is_jump = false;
-                    is_Flying = true;
-                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && s.getY() %(pos.getY() + 40)<10){
+                } else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)){
+                    if (s.getType() == 1) {
+                        is_jump = false;
+                        is_Flying = true;
+                    } else if (s.getType() == 2) {
+                        is_jump = false;
+                        is_Flying = true;
+                        blockList.remove(i);
+                    }
+                } else if (pos.getY() < s.getY()+40 && pos.getY() > s.getY() - 40 && pos.getX() == s.getX() + 40){
+                    is_left = false;
+                } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && s.getY() % (pos.getY() + 40) <10 ) {
                     on_obstacle = true;
                     tempObstacle = s;
-                    break;
+                    System.out.println(s.getY() - (pos.getY() + 40));
+
+
                 }
             }
         }
 
+        if (on_obstacle) {
+            if(tempObstacle.getType() == 3){
+                if ((pos.getX() > tempObstacle.getX() + 80)) {
+                    on_obstacle = false;
+                    is_Flying = true;
+                } else if ((pos.getX() + 40) < tempObstacle.getX()) {
+                    System.out.println(pos.getX());
+                    System.out.println(tempObstacle.getX());
+                    on_obstacle = false;
+                    is_Flying = true;
+                } else if (is_jump) {
+                    on_obstacle = false;
+                }
+            }else if(tempObstacle.getType() == 1 || tempObstacle.getType() == 2 || tempObstacle.getType() == 4){
+                if ((pos.getX() > tempObstacle.getX() + 40)) {
+                    on_obstacle = false;
+                    is_Flying = true;
+                } else if ((pos.getX() + 40) < tempObstacle.getX()) {
+                    System.out.println(pos.getX());
+                    System.out.println(tempObstacle.getX());
+                    on_obstacle = false;
+                    is_Flying = true;
+                } else if (is_jump) {
+                    on_obstacle = false;
+                }
+            }
 
-        if(on_obstacle && (pos.getX() > tempObstacle.getX() +80)){
-            on_obstacle = false;
-            is_Flying = true;
-        } else if(on_obstacle && (pos.getX()+40) < tempObstacle.getX()){
-            on_obstacle = false;
-            is_Flying = true;
-        }else  if(is_jump){
-            on_obstacle = false;
         }
-
 
         for(int i = 0, len = enemyTests.size();i < len;i++){
             if(is_Flying && enemyTests.get(i).getY() %(pos.getY() + 40)<15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40 ){
@@ -330,6 +401,7 @@ public class RunningMario_completed extends GameEngine {
             } else {
                 upTime += 1;
             }
+            System.out.println(pos.getY());
         }else if(!is_jump && rebound){
             pos.setLocation(pos.getX(), pos.getY() - upV);
             if (upTime == 3) {
