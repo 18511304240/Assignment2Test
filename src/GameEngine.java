@@ -76,6 +76,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
         mFrame.setLocation(200,50);
         mFrame.setTitle("Window");
         mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mFrame.setResizable(true);
         mFrame.add(mPanel);
         mFrame.setVisible(true);
 
@@ -105,24 +106,21 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
                     }
                 });
 
-        mFrame.addComponentListener( new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent componentEvent) {
-                // Resize the window to include insets (insets are just the boarders that the Operating System puts on the board)
-                Insets insets = mFrame.getInsets();
-                mFrame.setSize(mWidth + insets.left + insets.right, mHeight + insets.top + insets.bottom);
-            }
-        });
+        // Resize the window (insets are just the boarders that the Operating System puts on the board)
+        Insets insets = mFrame.getInsets();
+        mFrame.setSize(width + insets.left + insets.right, height + insets.top + insets.bottom);
     }
 
 
     public void setWindowSize(final int width, final int height) {
-        mWidth = width;
-        mHeight = height;
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 // Resize the window (insets are just the boarders that the Operating System puts on the board)
+                Insets insets = mFrame.getInsets();
+                mWidth = width;
+                mHeight = height;
+                mFrame.setSize(width + insets.left + insets.right, height + insets.top + insets.bottom);
                 mPanel.setSize(width, height);
             }
         });

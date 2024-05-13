@@ -32,6 +32,10 @@ public class RunningMario_completed extends GameEngine {
         public int getType() {
             return type;
         }
+        public int setType(int i){
+            type = i;
+            return type;
+        }
 
         public Obstacle(int x, int y, int type){
             this.x = x;
@@ -142,12 +146,12 @@ public class RunningMario_completed extends GameEngine {
     //-------------------------------------------------------
     // Your Program
     //-------------------------------------------------------
-    Image sheet,sheet2,sheet3_Enemy;
+    Image sheet,sheet2,sheet3_Enemy,zhuan1;
     Image background;
     Image[] frames,blockQuestion,Chestnut;
     Image jumpMario;
     Image ChestnutDie;
-    Image block,Tube,block2;
+    Image block,Tube,block2,zhuan2;
     int groundPosition;
     int currentFrame;
     int upTime;
@@ -155,6 +159,7 @@ public class RunningMario_completed extends GameEngine {
     double timeElapsed;
     List<Obstacle> blockList = new ArrayList<>();
     List<EnemyTest> enemyTests = new ArrayList<>();
+    AudioClip Title = loadAudio("bgm.wav");
 
     Obstacle tempObstacle;
     //-------------------------------------------------------
@@ -164,6 +169,7 @@ public class RunningMario_completed extends GameEngine {
     //draw and design the level
     public void designObstacle(){
         blockList.add(new Obstacle(100,50,1));
+        blockList.add(new Obstacle(100,400,5));
         blockList.add(new Obstacle(350,390,1));
         blockList.add(new Obstacle(390,390,1));
         blockList.add(new Obstacle(430,230,2));
@@ -238,6 +244,8 @@ public class RunningMario_completed extends GameEngine {
                 drawImage(Tube,o.getX(),o.getY(),80,80);
             }else if(o.getType() == 4){
                 drawImage(block2,o.getX(),o.getY(),40,40);
+            }else if (o.getType() == 5){
+                drawImage(zhuan2,o.getX(),o.getY(),40,40);
             }
         }
     }
@@ -260,14 +268,19 @@ public class RunningMario_completed extends GameEngine {
                 }
             }
 
-            if(s.getType() == 1 || s.getType() == 2 || s.getType() == 4){
+            if(s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5){
                 if(pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()){
                     is_right = false;
                 } else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)){
                     if (s.getType() == 1) {
                         is_jump = false;
                         is_Flying = true;
+                        blockList.remove(i);
                     } else if (s.getType() == 2) {
+                        is_jump = false;
+                        is_Flying = true;
+                        s.setType(1);
+                    }else if (s.getType() == 5){
                         is_jump = false;
                         is_Flying = true;
                         blockList.remove(i);
@@ -297,7 +310,7 @@ public class RunningMario_completed extends GameEngine {
                 } else if (is_jump) {
                     on_obstacle = false;
                 }
-            }else if(tempObstacle.getType() == 1 || tempObstacle.getType() == 2 || tempObstacle.getType() == 4){
+            }else if(tempObstacle.getType() == 1 || tempObstacle.getType() == 2 || tempObstacle.getType() == 4 || tempObstacle.getType() == 5){
                 if ((pos.getX() > tempObstacle.getX() + 40)) {
                     on_obstacle = false;
                     is_Flying = true;
@@ -329,6 +342,7 @@ public class RunningMario_completed extends GameEngine {
     // Initialise the Game
     public void init() {
         setWindowSize(800,645);
+        startAudioLoop(Title,1);
 
 
         upV = 10;
@@ -337,6 +351,7 @@ public class RunningMario_completed extends GameEngine {
         Chestnut = new Image[2];
         sheet = loadImage("miniMario.png");
         sheet2 = loadImage("Obstacle.png");
+        zhuan1 = loadImage("zhuan1.png");
         sheet3_Enemy = loadImage("AllCharacter.png");
         background = loadImage("MarioBackground.png");
         Tube = subImage(sheet2,0,145,35,35);
@@ -345,6 +360,7 @@ public class RunningMario_completed extends GameEngine {
         }
         block = subImage(sheet2,34,0,17,17);
         block2 = subImage(sheet2,0,18,17,17);
+        zhuan2 = subImage(zhuan1,0,0,30,30);
         for(int i = 0; i < 3; i++){
             blockQuestion[i] = subImage(sheet2,432 + 18 * i,0,17,17);
         }
