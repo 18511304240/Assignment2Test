@@ -2,8 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 
@@ -35,6 +34,10 @@ public class RunningMario_completed extends GameEngine {
         public int setType(int i){
             type = i;
             return type;
+        }
+        public int setY(int i){
+            this.y = i;
+            return y;
         }
 
         public Obstacle(int x, int y, int type){
@@ -119,6 +122,8 @@ public class RunningMario_completed extends GameEngine {
     public void designEnemy(){
         enemyTests.add(new EnemyTest(200,groundPosition,1,2,true));
         enemyTests.add(new EnemyTest(700,groundPosition,1,2,false));
+        enemyTests.add(new EnemyTest(1300,groundPosition,2,2,false));
+        enemyTests.add(new EnemyTest(1500,groundPosition,2,2,true));
     }
 
     int dieTime = 40;
@@ -126,7 +131,13 @@ public class RunningMario_completed extends GameEngine {
         for(int i = 0,len = enemyTests.size();i < len;i++){
             if (enemyTests.get(i).isLive) {
                 enemyTests.get(i).run();
-                drawImage(Chestnut[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                if (i < 2){
+                    drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                }else{
+                    drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                }
+
+
             }else {
                 if(dieTime == 0){
                     enemyTests.remove(enemyTests.get(i));
@@ -148,8 +159,8 @@ public class RunningMario_completed extends GameEngine {
     //-------------------------------------------------------
     Image sheet,sheet2,sheet3_Enemy,zhuan1;
     Image background;
-    Image[] frames,blockQuestion,Chestnut;
-    Image jumpMario;
+    Image[] frames,blockQuestion,Chestnut,Turtle;
+    Image jumpMario,deadMario;
     Image ChestnutDie;
     Image block,Tube,block2,zhuan2;
     int groundPosition;
@@ -157,9 +168,12 @@ public class RunningMario_completed extends GameEngine {
     int upTime;
     double animTime;
     double timeElapsed;
+    boolean gameover = false;
+
     List<Obstacle> blockList = new ArrayList<>();
     List<EnemyTest> enemyTests = new ArrayList<>();
     AudioClip Title = loadAudio("bgm.wav");
+
 
     Obstacle tempObstacle;
     //-------------------------------------------------------
@@ -169,7 +183,7 @@ public class RunningMario_completed extends GameEngine {
     //draw and design the level
     public void designObstacle(){
         blockList.add(new Obstacle(100,50,1));
-        blockList.add(new Obstacle(100,400,5));
+        blockList.add(new Obstacle(150,400,5));
         blockList.add(new Obstacle(350,390,1));
         blockList.add(new Obstacle(390,390,1));
         blockList.add(new Obstacle(430,230,2));
@@ -251,104 +265,215 @@ public class RunningMario_completed extends GameEngine {
     }
 
     //collision Check
-    public void checkCollision(){
-        for(int i = 0; i < blockList.size(); i++){
-            Obstacle s = blockList.get(i);
-            if (s.getType() == 3){
-                if(pos.getX() + 40 == s.getX()&& s.getY() < pos.getY() + 40){
-                    is_right = false;
-                    break;
-                }else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() % (pos.getY() + 40) < 10){
-                    on_obstacle = true;
-                    tempObstacle = s;
-                    break;
-                }else if(pos.getX() == s.getX() + 80 && s.getY() < pos.getY() + 40){
-                    is_left = false;
-                    break;
-                }
-            }
-
-            if(s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5){
-                if(pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()){
-                    is_right = false;
-                } else if(pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)){
-                    if (s.getType() == 1) {
-                        is_jump = false;
-                        is_Flying = true;
-                        blockList.remove(i);
-                    } else if (s.getType() == 2) {
-                        is_jump = false;
-                        is_Flying = true;
-                        s.setType(1);
-                    }else if (s.getType() == 5){
-                        is_jump = false;
-                        is_Flying = true;
-                        blockList.remove(i);
+    public void checkCollision() {
+        if (!is_dead){
+        for (int i = 0; i < blockList.size(); i++) {
+                Obstacle s = blockList.get(i);
+                if (s.getType() == 3) {
+                    if (pos.getX() + 40 == s.getX() && s.getY() < pos.getY() + 40) {
+                        is_right = false;
+                        break;
+                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() % (pos.getY() + 40) < 10) {
+                        on_obstacle = true;
+                        tempObstacle = s;
+                        break;
+                    } else if (pos.getX() == s.getX() + 80 && s.getY() < pos.getY() + 40) {
+                        is_left = false;
+                        break;
                     }
-                } else if (pos.getY() < s.getY()+40 && pos.getY() > s.getY() - 40 && pos.getX() == s.getX() + 40){
-                    is_left = false;
-                } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && s.getY() % (pos.getY() + 40) <10 ) {
-                    on_obstacle = true;
-                    tempObstacle = s;
-                    System.out.println(s.getY() - (pos.getY() + 40));
-
-
                 }
-            }
-        }
 
-        if (on_obstacle) {
-            if(tempObstacle.getType() == 3){
-                if ((pos.getX() > tempObstacle.getX() + 80)) {
-                    on_obstacle = false;
-                    is_Flying = true;
-                } else if ((pos.getX() + 40) < tempObstacle.getX()) {
-                    System.out.println(pos.getX());
-                    System.out.println(tempObstacle.getX());
-                    on_obstacle = false;
-                    is_Flying = true;
-                } else if (is_jump) {
-                    on_obstacle = false;
-                }
-            }else if(tempObstacle.getType() == 1 || tempObstacle.getType() == 2 || tempObstacle.getType() == 4 || tempObstacle.getType() == 5){
-                if ((pos.getX() > tempObstacle.getX() + 40)) {
-                    on_obstacle = false;
-                    is_Flying = true;
-                } else if ((pos.getX() + 40) < tempObstacle.getX()) {
-                    System.out.println(pos.getX());
-                    System.out.println(tempObstacle.getX());
-                    on_obstacle = false;
-                    is_Flying = true;
-                } else if (is_jump) {
-                    on_obstacle = false;
+                if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5) {
+                    if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()) {
+                        is_right = false;
+                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)) {
+                        if (s.getType() == 1) {
+                            is_jump = false;
+                            is_Flying = true;
+                            animateBox(s);
+                        } else if (s.getType() == 2) {
+                            is_jump = false;
+                            is_Flying = true;
+                            animateBox(s);
+                        } else if (s.getType() == 5) {
+                            is_jump = false;
+                            is_Flying = true;
+                            blockList.remove(i);
+                        }
+                    } else if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() == s.getX() + 40) {
+                        is_left = false;
+                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && s.getY() % (pos.getY() + 40) < 10) {
+                        on_obstacle = true;
+                        tempObstacle = s;
+                        System.out.println(s.getY() - (pos.getY() + 40));
+
+
+                    }
                 }
             }
 
-        }
-
-        for(int i = 0, len = enemyTests.size();i < len;i++){
-            if(is_Flying && enemyTests.get(i).getY() %(pos.getY() + 40)<15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40 ){
-                if(enemyTests.get(i).isLive){
-                    rebound = true;
-                    enemyTests.get(i).setLive(false);
+            if (on_obstacle) {
+                if (tempObstacle.getType() == 3) {
+                    if ((pos.getX() > tempObstacle.getX() + 80)) {
+                        on_obstacle = false;
+                        is_Flying = true;
+                    } else if ((pos.getX() + 40) < tempObstacle.getX()) {
+                        System.out.println(pos.getX());
+                        System.out.println(tempObstacle.getX());
+                        on_obstacle = false;
+                        is_Flying = true;
+                    } else if (is_jump) {
+                        on_obstacle = false;
+                    }
+                } else if (tempObstacle.getType() == 1 || tempObstacle.getType() == 2 || tempObstacle.getType() == 4 || tempObstacle.getType() == 5) {
+                    if ((pos.getX() > tempObstacle.getX() + 40)) {
+                        on_obstacle = false;
+                        is_Flying = true;
+                    } else if ((pos.getX() + 40) < tempObstacle.getX()) {
+                        System.out.println(pos.getX());
+                        System.out.println(tempObstacle.getX());
+                        on_obstacle = false;
+                        is_Flying = true;
+                    } else if (is_jump) {
+                        on_obstacle = false;
+                    }
                 }
 
             }
-        }
 
+            for (int i = 0, len = enemyTests.size(); i < len; i++) {
+                if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
+                    if (enemyTests.get(i).isLive) {
+                        rebound = true;
+                        enemyTests.get(i).setLive(false);
+                    }
+
+                }
+                if (!is_Flying && pos.getY() == enemyTests.get(i).getY() && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
+                    if (enemyTests.get(i).isLive) {
+                        is_dead = true;
+
+                    }
+                }
+
+            }
+
+
+        }
     }
+
+
+
+    private void animateBox(Obstacle i) {
+        final int moveDistance = 10;
+        final int returnSpeed = 2;
+        int initialY = i.getY();
+
+        Thread animationThread = new Thread(() -> {
+            int currentY = i.getY();
+
+            int targetY = currentY - moveDistance;
+
+            while (i.getY() > targetY) {
+
+               i.setY(i.getY() - 1);
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(i.getType() == 2){
+                i.setType(1);
+            }
+            while (i.getY() < initialY) {
+                i.setY(i.getY() + returnSpeed);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            i.setY(initialY);
+        });
+        animationThread.start();
+    }
+
+    public void timereset(){
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                // 在此处执行超过5秒后的操作
+                gameover = true;
+            }
+        };
+
+        // 设置定时任务，在5秒后执行
+        timer.schedule(task, 3000);
+    }
+
+
+
+
+    private void animatemario() {
+        final int ascendDistance = 5; // 上升的距离
+        final int ascendSpeed = 5;
+        final int descendSpeed = 3;
+
+
+
+        Thread hitAnimationThread = new Thread(() -> {
+            // 马里奥上升
+            int distanceAscended = 0; // 已上升的距离
+            while (distanceAscended < ascendDistance) {
+                pos.setLocation(pos.getX(), pos.getY() - ascendSpeed);
+                distanceAscended += ascendSpeed; // 更新已上升的距离
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // 等待一段时间
+            try {
+                Thread.sleep(500); // 停顿一下
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // 马里奥下降
+            while (pos.getY() < 700) { // 这里的条件可以根据你的实际需求进行调整
+                pos.setLocation(pos.getX(), pos.getY() + descendSpeed);
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        hitAnimationThread.start();
+    }
+
 
 
     // Initialise the Game
     public void init() {
         setWindowSize(800,645);
-        startAudioLoop(Title,1);
+        startAudioLoop(Title,10);
+
 
 
         upV = 10;
         frames = new Image[4];
         blockQuestion = new Image[3];
         Chestnut = new Image[2];
+        Turtle = new Image[2];
         sheet = loadImage("miniMario.png");
         sheet2 = loadImage("Obstacle.png");
         zhuan1 = loadImage("zhuan1.png");
@@ -364,10 +489,13 @@ public class RunningMario_completed extends GameEngine {
         for(int i = 0; i < 3; i++){
             blockQuestion[i] = subImage(sheet2,432 + 18 * i,0,17,17);
         }
-
+        deadMario = subImage(sheet,96,0,16,16);
         jumpMario = subImage(sheet,80,0,16,16);
         for(int i = 0; i < 2;i++){
             Chestnut[i] = subImage(sheet3_Enemy,227 + i * 16,11,16,17);
+        }
+        for(int i = 0; i < 2;i++){
+            Turtle[i] = subImage(sheet3_Enemy,338,29,16,35);
         }
         ChestnutDie = subImage(sheet3_Enemy,259,19,15,8);
 
@@ -388,6 +516,10 @@ public class RunningMario_completed extends GameEngine {
         animTime += dt;
 
         checkCollision();
+        if (is_dead){
+            animatemario();
+        }
+
         //currentFrame = (currentFrame + 1) % 3;
         if (is_moving) {
             if (is_left) {
@@ -456,6 +588,16 @@ public class RunningMario_completed extends GameEngine {
         return (int)Math.floor(((animTime % d) / d) * num_frames);
     }
 
+    public void resetgame(){
+        gameover = false;
+        is_dead = false;
+//        groundPosition = 550 - 38;
+//        pos.setLocation(100,groundPosition);
+//        designObstacle();
+//        designEnemy();
+
+    }
+
 
     // This gets called any time the Operating System
     // tells the program to paint itself
@@ -464,85 +606,106 @@ public class RunningMario_completed extends GameEngine {
         changeBackgroundColor(Color.white);
         clearBackground(width(),height());
 
-
-
-        if (is_left)
-        {
-            if (!is_center)
+        if (!gameover){
+            if (is_left)
             {
-                drawImage(background, 0, 0, 10500, 645);
-                drawObstacle();
-                drawEnemy();
-                if(is_Flying || is_jump){
-                    drawImage(jumpMario,pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
-                }else {
-                    drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
-                }
-
-
-
-            }
-            else
-            {
-                saveCurrentTransform();
-                translate(-pos.getX()+250,0);
-
-                drawImage(background, 0, 0, 10500, 645);
-                drawObstacle();
-                drawEnemy();
-                timeElapsed++;
-
-
-                restoreLastTransform();
-                if(is_Flying || is_jump){
-                    drawImage(jumpMario, 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
-                }else {
-                    drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
-                }
-
-                if(pos.getX() <= 250){
-                    is_center = false;
-                }
-
-            }
-        }
-        else
-        {
-            if (!is_center) {
-                drawImage(background, 0, 0, 10500, 645);
-                drawImage(block,obstaclePos.getX(),obstaclePos.getY());
-                drawObstacle();
-                drawEnemy();
-                if(is_Flying || is_jump){
-                    drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
-                }else {
-                    drawImage(frames[currentFrame], pos.getX(), pos.getY(), 20 * 2, 20 * 2);
-                }
-
-                if(pos.getX() >= 250)
+                if (!is_center)
                 {
-                    is_center = true;
+                    drawImage(background, 0, 0, 10500, 645);
+                    drawObstacle();
+                    drawEnemy();
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario,pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
+                    }else {
+                        if(is_dead){
+                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                            timereset();
+                        }else {
+                            drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
+                        }
+                    }
                 }
+                else
+                {
+                    saveCurrentTransform();
+                    translate(-pos.getX()+250,0);
 
+                    drawImage(background, 0, 0, 10500, 645);
+                    drawObstacle();
+                    drawEnemy();
+                    timeElapsed++;
+                    restoreLastTransform();
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario, 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
+                    }else {
+                        if(is_dead){
+                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                            timereset();
+                        }else {
+                            drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
+                        }
+                    }
+                    if(pos.getX() <= 250){
+                        is_center = false;
+                    }
+                }
             }
             else
             {
-                saveCurrentTransform();
-                translate(-pos.getX()+250,0);
-                drawImage(background, 0, 0, 10500, 645);
+                if (!is_center) {
+                    drawImage(background, 0, 0, 10500, 645);
+                    drawImage(block,obstaclePos.getX(),obstaclePos.getY());
+                    drawObstacle();
+                    drawEnemy();
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                    }else {
+                        if(is_dead){
+                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                            timereset();
+                        }else {
+                            drawImage(frames[currentFrame], pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                        }
+                    }
+                    if(pos.getX() >= 250)
+                    {
+                        is_center = true;
+                    }
 
-                drawImage(blockQuestion[getFrame(1,3)],200,50,32,32);
-                drawObstacle();
-                drawEnemy();
+                }
+                else
+                {
+                    saveCurrentTransform();
+                    translate(-pos.getX()+250,0);
+                    drawImage(background, 0, 0, 10500, 645);
 
-                restoreLastTransform();
-                if(is_Flying || is_jump){
-                    drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
-                }else {
-                    drawImage(frames[currentFrame], 250, pos.getY(), 20 * 2, 20 * 2);
+                    drawImage(blockQuestion[getFrame(1,3)],200,50,32,32);
+                    drawObstacle();
+                    drawEnemy();
+
+                    restoreLastTransform();
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
+                    }else {
+                        if(is_dead){
+                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                            timereset();
+                        }else {
+                            drawImage(frames[currentFrame], 250, pos.getY(), 20 * 2, 20 * 2);
+                        }
+
+                    }
+
                 }
             }
+        }else{
+            changeColor(black);
+            drawBoldText(100, 200, "GAME OVER!", "Arial", 50);
+            drawText(50, 300, "Press Space to quit the game!", "Arial", 30);
         }
+
+
+
         V -= 5;
 
     }
@@ -557,47 +720,73 @@ public class RunningMario_completed extends GameEngine {
     boolean is_Flying = false;
     boolean on_obstacle = false;
     boolean rebound = false;
+    boolean is_dead = false;
     int upV;
 
     @Override
     public void keyPressed(KeyEvent e) {
-
-        if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-        {
-            is_moving = true;
+        if (is_dead){
+            is_moving = false;
             is_left = false;
-            is_right = true;
-
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT)
-        {
-            is_moving = true;
-            is_left = true;
             is_right = false;
-        }
+            is_Flying = false;
+            if (e.getKeyCode() == KeyEvent.VK_SPACE){
+//              resetgame();
+                System.exit(0);
 
-        if(e.getKeyCode() == KeyEvent.VK_UP){
-            if(!is_Flying){
-                is_jump = true;
+            }
+        }else{
+            if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+            {
+                is_moving = true;
+                is_left = false;
+                is_right = true;
+            }
+            else if (e.getKeyCode() == KeyEvent.VK_LEFT)
+            {
+                is_moving = true;
+                is_left = true;
+                is_right = false;
+            }
+
+            if(e.getKeyCode() == KeyEvent.VK_UP){
+                if(!is_Flying){
+                    is_jump = true;
+                }
+
             }
 
         }
+
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+        if (is_dead){
             is_moving = false;
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT){
-            is_moving = false;
+            is_left = false;
+            is_right = false;
+            is_Flying = false;
+            if (e.getKeyCode() == KeyEvent.VK_SPACE){
+                System.exit(0);
+//                resetgame();
+            }
+        }else {
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+                is_moving = false;
+            }
+            else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+                is_moving = false;
+            }
+
+            if (e.getKeyCode() == KeyEvent.VK_UP){
+                is_jump = false;
+                is_Flying = true;
+            }
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_UP){
-            is_jump = false;
-            is_Flying = true;
-        }
+
 
     }
     @Override
