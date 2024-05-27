@@ -183,7 +183,6 @@ public class RunningMario_completed extends GameEngine {
     //draw and design the level
     public void designObstacle(){
         blockList.add(new Obstacle(100,50,1));
-        blockList.add(new Obstacle(150,400,5));
         blockList.add(new Obstacle(350,390,1));
         blockList.add(new Obstacle(390,390,1));
         blockList.add(new Obstacle(430,230,2));
@@ -227,6 +226,7 @@ public class RunningMario_completed extends GameEngine {
         }
         blockList.add(new Obstacle(3300,390,2));
         blockList.add(new Obstacle(3400,5155,3));
+        //平行四边形
         for (int i=0;i<5;i++){
             int yy=515-i*40;
             int xx=3800+i*40;
@@ -236,6 +236,9 @@ public class RunningMario_completed extends GameEngine {
             }
 
         }
+        blockList.add(new Obstacle(4200,355,2));
+
+        //三角形
         for (int i=0;i<5;i++){
             int yy=355+i*40;
             int xx=4500-i*40;
@@ -243,8 +246,150 @@ public class RunningMario_completed extends GameEngine {
                 blockList.add(new Obstacle(xx+j*40,yy,4));
 
             }
-
         }
+
+        //T1
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(4700+i*40,355,4));
+        }
+        for (int i=0;i<4;i++){
+            blockList.add(new Obstacle(4740,395+i*40,4));
+        }
+
+        blockList.add(new Obstacle(4900,160,2));
+
+        //T2
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(5000+i*40,355,4));
+        }
+        for (int i=0;i<4;i++){
+            blockList.add(new Obstacle(5040,395+i*40,4));
+        }
+
+        blockList.add(new Obstacle(5220,160,2));
+
+        //T3
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(5340+i*40,355,4));
+        }
+        for (int i=0;i<4;i++){
+            blockList.add(new Obstacle(5380,395+i*40,4));
+        }
+//金字塔1
+        for (int i=0;i<9;i++){
+            blockList.add(new Obstacle(5800+i*40,515,4));
+        }
+        for (int i=0;i<7;i++){
+            blockList.add(new Obstacle(5840+i*40,475,4));
+        }
+        for (int i=0;i<5;i++){
+            blockList.add(new Obstacle(5880+i*40,435,4));
+        }
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(5920+i*40,395,4));
+        }
+        blockList.add(new Obstacle(5960,355,4));
+
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(6280+i*40,315,2));
+        }
+
+//金字塔2
+        for (int i=0;i<9;i++){
+            blockList.add(new Obstacle(6500+i*40,515,4));
+        }
+        for (int i=0;i<7;i++){
+            blockList.add(new Obstacle(6540+i*40,475,4));
+        }
+        for (int i=0;i<5;i++){
+            blockList.add(new Obstacle(6580+i*40,435,4));
+        }
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(6620+i*40,395,4));
+        }
+        blockList.add(new Obstacle(6660,355,4));
+
+        //天梯
+        blockList.add(new Obstacle(6960,515,1));
+        for (int i=0;i<2;i++){
+            blockList.add(new Obstacle(7000,515-i*40,1));
+        }
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(7120,515-i*40,1));
+        }
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(7160,515-i*40,1));
+        }
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(7200,515-i*40,1));
+        }
+        for (int i=0;i<4;i++){
+            blockList.add(new Obstacle(7240,515-i*40,1));
+        }
+        for (int i=0;i<5;i++){
+            blockList.add(new Obstacle(7360,515-i*40,1));
+        }
+        for (int i=0;i<5;i++){
+            blockList.add(new Obstacle(7400,515-i*40,1));
+        }
+        for (int i=0;i<5;i++){
+            blockList.add(new Obstacle(7440,515-i*40,1));
+        }
+        for (int i=0;i<6;i++){
+            blockList.add(new Obstacle(7480,515-i*40,1));
+        }
+        for (int i=0;i<7;i++){
+            blockList.add(new Obstacle(7600,515-i*40,1));
+        }
+        for (int i=0;i<7;i++){
+            blockList.add(new Obstacle(7640,515-i*40,1));
+        }
+        for (int i=0;i<7;i++){
+            blockList.add(new Obstacle(7680,515-i*40,1));
+        }
+        for (int i=0;i<8;i++){
+            blockList.add(new Obstacle(7720,515-i*40,1));
+        }
+        for (int i=0;i<8;i++){
+            blockList.add(new Obstacle(7760,515-i*40,1));
+        }
+
+
+
+
+        //天空之城
+        for (int i=0;i<20;i++){
+            for (int j=0;j<=1;j++){
+                blockList.add(new Obstacle(8000+i*40,355-j*40,1));
+            }
+        }
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(8000,275-i*40,1));
+        }
+
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(8760,275-i*40,1));
+        }
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(8120+i*40,195,2));
+        }
+        blockList.add(new Obstacle(8380,115,2));
+        for (int i=0;i<3;i++){
+            blockList.add(new Obstacle(8560+i*40,195,2));
+        }
+//        blockList.add(new Obstacle(8280,235,3));
+//        blockList.add(new Obstacle(8440,235,3));
+        blockList.add(new Obstacle(8320,235,4));
+        blockList.add(new Obstacle(8320,275,4));
+
+        blockList.add(new Obstacle(8440,235,4));
+        blockList.add(new Obstacle(8440,275,4));
+
+
+        for (int i=0;i<6;i++){
+            blockList.add(new Obstacle(7920+i*200,475,3));
+        }
+        blockList.add(new Obstacle(9030,275,2));
 
     }
 
@@ -536,6 +681,7 @@ public class RunningMario_completed extends GameEngine {
             }
 
             currentFrame = getFrame(0.3, 4);
+//            System.out.println(pos.getX());
         } else {
             currentFrame = 0;
         }
