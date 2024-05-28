@@ -12,7 +12,7 @@ public class RunningMario_completed extends GameEngine{
         // Warning - don't edit this function.
 
         // Create a new game.
-        createGame(new RunningMario_completed());
+        createGame(new RunningMario_completed(),60);
     }
 
     public class Obstacle{
@@ -198,7 +198,7 @@ public class RunningMario_completed extends GameEngine{
     Image sheet,sheet2,sheet3_Enemy,zhuan1,M1,G1;
     Image background;
     Image menubackground1;
-    Image[] frames,blockQuestion,Chestnut,Turtle;
+    Image[] frames,blockQuestion,coinsAppear,Chestnut,Turtle;
     Image jumpMario,deadMario;
     Image ChestnutDie,TurtleDie;
     Image block,Tube,block2,zhuan2;
@@ -230,6 +230,9 @@ public class RunningMario_completed extends GameEngine{
         blockList.add(new Obstacle(510,230,2));
         blockList.add(new Obstacle(550,475,3));
         blockList.add(new Obstacle(650,230,1));
+
+//        blockList.add(new Obstacle(690,350,6));
+
         blockList.add(new Obstacle(690,390,2));
         blockList.add(new Obstacle(730,390,1));
         blockList.add(new Obstacle(770,390,2));
@@ -449,12 +452,17 @@ public class RunningMario_completed extends GameEngine{
                 drawImage(block2,o.getX(),o.getY(),40,40);
             }else if (o.getType() == 5){
                 drawImage(zhuan2,o.getX(),o.getY(),40,40);
+            } else if (o.getType() ==6) {
+                drawImage(coinsAppear[getFrame(1,3)],o.getX(),o.getY(),40,40);
+
             }
         }
     }
 
     //collision Check
     public void checkCollision() {
+        Timer coinTimer = new Timer();
+
         if (!is_dead){
         for (int i = 0; i < blockList.size(); i++) {
                 Obstacle s = blockList.get(i);
@@ -485,6 +493,17 @@ public class RunningMario_completed extends GameEngine{
                             is_jump = false;
                             is_Flying = true;
                             animateBox(s);
+                            blockList.add(new Obstacle(s.getX(),s.getY()-50,6));
+//                            coinTimer.schedule(new TimerTask() {
+//                                @Override
+//                                public void run() {
+//                                    // 两秒后执行的操作
+//                                    blockList.remove(coinsAppear);
+//                                    coinTimer.cancel(); // 取消计时器
+//                                }
+//                            }, 2000); // 2000 毫秒即为两秒
+                            displayCoins();
+
                         } else if (s.getType() == 5) {
                             is_jump = false;
                             is_Flying = true;
@@ -611,6 +630,23 @@ public class RunningMario_completed extends GameEngine{
         animationThread.start();
     }
 
+    public void displayCoins(){
+        Timer coinTimer = new Timer();
+        for (int i = 0; i < blockList.size(); i++) {
+            Obstacle c = blockList.get(i);
+            if (c.getType()==6) {
+                coinTimer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        // 0.8s后执行的操作
+                        blockList.remove(c);
+                        coinTimer.cancel(); // 取消计时器
+                    }
+                }, 800); // 800 毫秒即为0.8秒
+            }
+        }
+    }
     public void timereset(){
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -747,6 +783,7 @@ public class RunningMario_completed extends GameEngine{
         upV = 10;
         frames = new Image[4];
         blockQuestion = new Image[3];
+        coinsAppear = new Image[3];
         Chestnut = new Image[2];
         Turtle = new Image[2];
         sheet = loadImage("miniMario.png");
@@ -764,6 +801,9 @@ public class RunningMario_completed extends GameEngine{
         zhuan2 = subImage(zhuan1,0,0,30,30);
         for(int i = 0; i < 3; i++){
             blockQuestion[i] = subImage(sheet2,432 + 18 * i,0,17,17);
+        }
+        for(int i = 0; i < 3; i++){
+            coinsAppear[i] = subImage(sheet2,432 + 18 * i,18,17,17);
         }
         deadMario = subImage(sheet,96,0,16,16);
         jumpMario = subImage(sheet,80,0,16,16);
