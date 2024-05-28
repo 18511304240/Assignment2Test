@@ -51,6 +51,7 @@ public class RunningMario_completed extends GameEngine {
     }
 
     public class EnemyTest{
+        private boolean isAnimating = false;
         int x;
         int y;
         int type;
@@ -58,6 +59,7 @@ public class RunningMario_completed extends GameEngine {
         int newX;
         boolean isRight;
         boolean isLive = true;
+        boolean Turtleisdie = false;
         public EnemyTest(int x,int y,int type,int v,boolean isRight){
             this.x = x;
             this.y = y;
@@ -95,6 +97,10 @@ public class RunningMario_completed extends GameEngine {
         }
 
 
+        public void setLocation(int x,int y){
+            this.x = x;
+            this.y = y;
+        }
         public int getY() {
             return y;
         }
@@ -102,6 +108,7 @@ public class RunningMario_completed extends GameEngine {
             return type;
         }
 
+        public boolean Turtleisdie() {  return Turtleisdie;}
         public int getX() {
             return x;
         }
@@ -114,8 +121,19 @@ public class RunningMario_completed extends GameEngine {
             isLive = live;
         }
 
+        public boolean isAnimating() {
+            return isAnimating;
+        }
+
+        public void setAnimating(boolean isAnimating) {
+            this.isAnimating = isAnimating;
+        }
         public boolean isLive() {
             return isLive;
+        }
+        public int setY(int y) {
+            this.y = y;
+            return y;
         }
     }
 
@@ -127,26 +145,46 @@ public class RunningMario_completed extends GameEngine {
     }
 
     int dieTime = 40;
+    int dieTime2 = 40;
     public void drawEnemy(){
         for(int i = 0,len = enemyTests.size();i < len;i++){
             if (enemyTests.get(i).isLive) {
                 enemyTests.get(i).run();
-                if (i < 2){
+                if (enemyTests.get(i).getType()==1){
                     drawImage(Chestnut[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
-                }else{
-                    drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                }else if (enemyTests.get(i).getType()==2){
+                    if (!enemyTests.get(i).Turtleisdie){
+                        drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                    }else{
+                        drawImage(TurtleDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                    }
                 }
 
 
-            }else {
-                if(dieTime == 0){
+            }
+            else {
+
+                if(dieTime == 0 || dieTime2 == 0){
                     enemyTests.remove(enemyTests.get(i));
                     len--;
                     i--;
-                    dieTime = 40;
+                    if (dieTime==0){
+                        dieTime = 40;
+                    }else if (dieTime2==0){
+//                        animateTurtle(i);
+                        dieTime2 = 40;
+                    }
+
                 }else {
-                    drawImage(ChestnutDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY() + 25,40,15);
-                    dieTime--;
+                    if (enemyTests.get(i).getType()==1){
+                        drawImage(ChestnutDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY() + 25,40,15);
+                        dieTime--;
+                    }
+                    if (enemyTests.get(i).getType()==2){
+//                        animateTurtle(i);
+                        dieTime2--;
+                        //乌龟退场
+                    }
                 }
 
 
@@ -162,7 +200,7 @@ public class RunningMario_completed extends GameEngine {
     Image menubackground1;
     Image[] frames,blockQuestion,Chestnut,Turtle;
     Image jumpMario,deadMario;
-    Image ChestnutDie;
+    Image ChestnutDie,TurtleDie;
     Image block,Tube,block2,zhuan2;
     int groundPosition;
     int currentFrame;
@@ -184,6 +222,7 @@ public class RunningMario_completed extends GameEngine {
     //draw and design the level
     public void designObstacle(){
         blockList.add(new Obstacle(100,50,1));
+        blockList.add(new Obstacle(150,400,5));
         blockList.add(new Obstacle(350,390,1));
         blockList.add(new Obstacle(390,390,1));
         blockList.add(new Obstacle(430,230,2));
@@ -488,10 +527,30 @@ public class RunningMario_completed extends GameEngine {
             }
 
             for (int i = 0, len = enemyTests.size(); i < len; i++) {
+                EnemyTest k = enemyTests.get(i);
                 if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
                     if (enemyTests.get(i).isLive) {
-                        rebound = true;
-                        enemyTests.get(i).setLive(false);
+                        if (enemyTests.get(i).getType() == 2) {
+                            if (!enemyTests.get(i).Turtleisdie) {
+                                rebound = true;
+                                enemyTests.get(i).Turtleisdie = true;
+                                if (pos.getX() + 20 < enemyTests.get(i).getNewX()) {
+                                    enemyTests.get(i).isRight = true;
+                                    enemyTests.get(i).v = Math.abs(enemyTests.get(i).v);
+                                } else {
+                                    enemyTests.get(i).isRight = false;
+                                    enemyTests.get(i).v = -Math.abs(enemyTests.get(i).v);
+                                }
+                            } else if (!enemyTests.get(i).isAnimating()) {
+                                animateTurtle(k);
+                                rebound = true;
+                            }
+                        } else {
+                            rebound = true;
+                            enemyTests.get(i).setLive(false);
+                        }
+                    } else if (enemyTests.get(i).getType() == 2 && !enemyTests.get(i).isAnimating()) {
+                        animateTurtle(k);
                     }
 
                 }
@@ -606,6 +665,46 @@ public class RunningMario_completed extends GameEngine {
         hitAnimationThread.start();
     }
 
+    private void animateTurtle(EnemyTest turtle) {
+        final int riseDistance = 20; // 上升的距离
+        final int fallSpeed = 5; // 下落的速度
+        final int fallDistance = 600; // 下落的总距离，假设屏幕高度为600
+        int initialY = turtle.getY();
+
+        turtle.setAnimating(true);
+
+        Thread deathAnimationThread = new Thread(() -> {
+            int currentY = turtle.getY();
+            int targetRiseY = currentY - riseDistance;
+
+            // 上升
+            while (turtle.getY() > targetRiseY) {
+                turtle.setY(turtle.getY() - 1);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // 下落到屏幕外
+            while (turtle.getY() < initialY + fallDistance) {
+                turtle.setY(turtle.getY() + fallSpeed);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // 动画完成
+            turtle.setAnimating(false);
+            turtle.setLive(false);
+        });
+
+
+        deathAnimationThread.start();
+    }
 
     enum GameState {Menu, Options, Play};
     GameState state = GameState.Menu;
@@ -645,9 +744,10 @@ public class RunningMario_completed extends GameEngine {
             Chestnut[i] = subImage(sheet3_Enemy,227 + i * 16,11,16,17);
         }
         for(int i = 0; i < 2;i++){
-            Turtle[i] = subImage(sheet3_Enemy,338,29,16,35);
+            Turtle[i] = subImage(sheet3_Enemy,338 + i * 16,29,16,35);
         }
         ChestnutDie = subImage(sheet3_Enemy,259,19,15,8);
+        TurtleDie = subImage(sheet3_Enemy,402,19,16,35);
 
         groundPosition = 550 - 38;
         pos.setLocation(100,groundPosition);
