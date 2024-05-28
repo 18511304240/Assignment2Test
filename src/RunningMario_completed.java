@@ -470,7 +470,7 @@ public class RunningMario_completed extends GameEngine{
                     if (pos.getX() + 40 == s.getX() && s.getY() < pos.getY() + 40) {
                         is_right = false;
                         break;
-                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && s.getY() % (pos.getY() + 40) < 10) {
+                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && Math.abs(s.getY() - (pos.getY() + 40)) < 10) {
                         on_obstacle = true;
                         tempObstacle = s;
                         break;
@@ -483,7 +483,7 @@ public class RunningMario_completed extends GameEngine{
                 if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5) {
                     if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()) {
                         is_right = false;
-                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)) {
+                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(pos.getY() - (s.getY() + 40)) < 10) {
                         if (s.getType() == 1) {
                             is_jump = false;
                             is_Flying = true;
@@ -508,10 +508,13 @@ public class RunningMario_completed extends GameEngine{
                             is_jump = false;
                             is_Flying = true;
                             blockList.remove(i);
+                        } else if (s.getType() ==4 ) {
+                            is_jump = false;
+                            is_Flying = true;
                         }
-                    } else if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() == s.getX() + 40) {
+                    } else if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && Math.abs(pos.getX() - (s.getX() + 40)) < 10) {
                         is_left = false;
-                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && s.getY() % (pos.getY() + 40) < 10) {
+                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(s.getY() - (pos.getY() + 40)) < 10) {
                         on_obstacle = true;
                         tempObstacle = s;
                         System.out.println(s.getY() - (pos.getY() + 40));
