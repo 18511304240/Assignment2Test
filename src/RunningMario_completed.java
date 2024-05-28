@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.List;
 
 
-public class RunningMario_completed extends GameEngine {
+public class RunningMario_completed extends GameEngine{
     // Main Function
     public static void main(String args[]) {
         // Warning - don't edit this function.
@@ -195,7 +195,7 @@ public class RunningMario_completed extends GameEngine {
     //-------------------------------------------------------
     // Your Program
     //-------------------------------------------------------
-    Image sheet,sheet2,sheet3_Enemy,zhuan1,M1;
+    Image sheet,sheet2,sheet3_Enemy,zhuan1,M1,G1;
     Image background;
     Image menubackground1;
     Image[] frames,blockQuestion,Chestnut,Turtle;
@@ -287,6 +287,10 @@ public class RunningMario_completed extends GameEngine {
 
             }
         }
+        blockList.add(new Obstacle(4620,355,4));
+        blockList.add(new Obstacle(4620,395,4));
+        blockList.add(new Obstacle(4620,435,4));
+        blockList.add(new Obstacle(4620,475,4));
 
         //T1
         for (int i=0;i<3;i++){
@@ -709,27 +713,35 @@ public class RunningMario_completed extends GameEngine {
         deathAnimationThread.start();
     }
 
-    enum GameState {Menu, Options, Play,Help};
+    enum GameState {Menu, Codex, Play,Help};
     GameState state = GameState.Menu;
     int menuOption = 0;
 
-    @Override
-    public boolean isCloseRequested() {
-        return false;
-    }
 
-    @Override
-    public void paintComponent(Graphics2D mGraphics) {
+    public void resetgame(){
+
+        score = 0;
+        init();
+//        state = GameState.Menu;
+//        groundPosition = 550 - 38;
+//        pos.setLocation(100,groundPosition);
+//        designObstacle();
+//        designEnemy();
 
     }
 
     // Initialise the Game
     public void init() {
-        setWindowSize(800,645);
-        startAudioLoop(Title,10);
 
+
+        setWindowSize(800,645);
+//        if (state == GameState.Play) {
+            startAudioLoop(Title, 10);
+
+//        }
         gameover = false;
         is_dead = false;
+
 
 
         upV = 10;
@@ -769,6 +781,7 @@ public class RunningMario_completed extends GameEngine {
 
         designObstacle();
         designEnemy();
+
     }
 
 
@@ -859,16 +872,7 @@ public class RunningMario_completed extends GameEngine {
         return (int)Math.floor(((animTime % d) / d) * num_frames);
     }
 
-    public void resetgame(){
 
-        score = 0;
-        init();
-//        groundPosition = 550 - 38;
-//        pos.setLocation(100,groundPosition);
-//        designObstacle();
-//        designEnemy();
-
-    }
 
 
     // This gets called any time the Operating System
@@ -888,10 +892,10 @@ public class RunningMario_completed extends GameEngine {
         } else if (state == GameState.Help) {
             drawHelp();
         }
-//        else if(state == GameState.Options) {
-//            // Show Options Menu
-//            drawOptions();
-//        }
+        else if(state == GameState.Codex) {
+            // Show Options Menu
+            drawCodex();
+        }
 
 
     }
@@ -1031,24 +1035,36 @@ public class RunningMario_completed extends GameEngine {
         // Options
         if(menuOption == 1) {
             changeColor( white);
-            drawBoldText(200, 300, "Options","Arial",80);
+            drawBoldText(200, 300, "Codex","Arial",80);
             M1 = subImage(sheet,16,0,16,16);
             drawImage(M1, 100, 220, 100, 100);
         } else {
             changeColor(150, 150, 150);
-            drawBoldText(200, 300, "Options","Arial",50);
+            drawBoldText(200, 300, "Codex","Arial",50);
         }
 
         // Exit
         if(menuOption == 2) {
             changeColor( white);
-            drawBoldText(200, 420, "Exit","Arial",80);
+            drawBoldText(200, 420, "Help","Arial",80);
             M1 = subImage(sheet,16,0,16,16);
             drawImage(M1, 100, 350, 100, 100);
         } else {
             changeColor(150, 150, 150);
             drawBoldText(200, 400, "Exit","Arial",50);
         }
+    }
+
+    public void drawCodex(){
+        changeColor(green);
+//            drawText(200, 350, "Play");
+        drawBoldText(50,100,"Mario","Arial",50);
+        drawBoldText(200,100,"Goomba ","Arial",50);
+        M1 = subImage(sheet,16,0,16,16);
+        drawImage(M1, 50, 120, 100, 100);
+        G1 = subImage(sheet3_Enemy,227,11,16,17);
+        drawImage(G1,250,120,100,100);
+
     }
 
     public void drawHelp(){
@@ -1077,6 +1093,10 @@ public class RunningMario_completed extends GameEngine {
         }  else if(state == GameState.Play) {
             // Call keyPressed for Game
             keyPressedGame(e);
+        } else if (state == GameState.Help) {
+            keyPressedHelp(e);
+        } else if (state == GameState.Codex) {
+            keyPressedCodex(e);
         }
 
     }
@@ -1090,16 +1110,17 @@ public class RunningMario_completed extends GameEngine {
 
     }
     public void keyPressedGame(KeyEvent e){
+
         if (is_dead){
             is_moving = false;
             is_left = false;
             is_right = false;
             is_Flying = false;
             if (e.getKeyCode() == KeyEvent.VK_SPACE){
-              resetgame();
+//              resetgame();
               stopAudioLoop(Title);
               state = GameState.Menu;
-//                System.exit(0);
+                System.exit(0);
 
             }
 //            if (e.getKeyCode() == KeyEvent.VK_ENTER){
@@ -1155,9 +1176,10 @@ public class RunningMario_completed extends GameEngine {
             // move to the options menu or
             // exit the game
             if (menuOption == 0){
+//                resetgame();
                 state = GameState.Play;
             } else if (menuOption == 1) {
-                state = GameState.Options;
+                state = GameState.Codex;
 
             } else if (menuOption ==2) {
                 state = GameState.Help;
@@ -1165,6 +1187,42 @@ public class RunningMario_completed extends GameEngine {
 
         }
     }
+
+    public void keyPressedCodex(KeyEvent e) {
+        // Move up in the menu
+        if(e.getKeyCode() == KeyEvent.VK_UP) {
+            // Add code to move up the menu
+            if(menuOption<=3){
+                menuOption--;
+            }else {
+                menuOption = 3;
+            }
+        }
+        // Move down in the menu
+        if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+            // Add code to move down the menu
+            if(menuOption<=3){
+                menuOption++;
+            }else {
+                menuOption = 3;
+            }
+        }
+        // Select an item
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            // Add code to change difficulty or
+            // return to the main menu
+
+                state = GameState.Menu;
+
+
+        }
+    }
+    public void keyPressedHelp(KeyEvent e){
+        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            state = GameState.Menu;
+        }
+    }
+
     public void keyReleasedGame(KeyEvent e){
         if (is_dead){
             is_moving = false;
