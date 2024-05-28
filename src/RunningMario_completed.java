@@ -842,6 +842,7 @@ public class RunningMario_completed extends GameEngine {
     public void resetgame(){
         gameover = false;
         is_dead = false;
+        init();
 //        groundPosition = 550 - 38;
 //        pos.setLocation(100,groundPosition);
 //        designObstacle();
@@ -967,9 +968,9 @@ public class RunningMario_completed extends GameEngine {
                 }
             }
         }else{
-            changeColor(black);
-            drawBoldText(100, 200, "GAME OVER!", "Arial", 50);
-            drawText(50, 300, "Press Space to quit the game!", "Arial", 30);
+            changeColor(white);
+            drawBoldText(80, 300, "GAME OVER!", "Arial", 100);
+            drawText(60, 500, "Press Space to quit the game!", "Arial", 50);
         }
 
 
@@ -992,7 +993,7 @@ public class RunningMario_completed extends GameEngine {
             changeColor( white);
             drawText(50, 100, "Options");
             M1 = subImage(sheet,16,0,16,16);
-            drawImage(M1, 0, 0, 50, 50);
+            drawImage(M1, 0, 50, 50, 50);
         } else {
             changeColor(150, 150, 150);
             drawText(50, 100, "Options");
@@ -1003,7 +1004,7 @@ public class RunningMario_completed extends GameEngine {
             changeColor( white);
             drawText(50, 150, "Exit");
             M1 = subImage(sheet,16,0,16,16);
-            drawImage(M1, 0, 0, 50, 50);
+            drawImage(M1, 0, 100, 50, 50);
         } else {
             changeColor(150, 150, 150);
             drawText(50, 150, "Exit");
@@ -1025,6 +1026,25 @@ public class RunningMario_completed extends GameEngine {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(state == GameState.Menu) {
+            // Call keyPressed for Main Menu
+            keyPressedMenu(e);
+        }  else if(state == GameState.Play) {
+            // Call keyPressed for Game
+            keyPressedGame(e);
+        }
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(state == GameState.Play) {
+            // Call handler for Game Play
+            keyReleasedGame(e);
+        }
+
+    }
+    public void keyPressedGame(KeyEvent e){
         if (is_dead){
             is_moving = false;
             is_left = false;
@@ -1057,12 +1077,43 @@ public class RunningMario_completed extends GameEngine {
             }
 
         }
-
-
     }
+    public void keyPressedMenu(KeyEvent e){
+        // Move up in the menu
+        if(e.getKeyCode() == KeyEvent.VK_UP) {
+            // Add code to move up the menu
+            if(menuOption<=3){
+                menuOption--;
+            }else {
+                menuOption = 3;
+            }
+        }
+        // Move down in the menu
+        if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+            // Add code to move down the menu
+            if (menuOption<=3) {
 
-    @Override
-    public void keyReleased(KeyEvent e) {
+                menuOption++;
+            }else {
+                menuOption = 0;
+            }
+        }
+        // Select an item
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            // Add code to either play the game,
+            // move to the options menu or
+            // exit the game
+            if (menuOption == 0){
+                resetgame();
+                state = GameState.Play;
+            } else if (menuOption == 1) {
+                state = GameState.Options;
+
+            }
+
+        }
+    }
+    public void keyReleasedGame(KeyEvent e){
         if (is_dead){
             is_moving = false;
             is_left = false;
@@ -1084,11 +1135,10 @@ public class RunningMario_completed extends GameEngine {
                 is_jump = false;
                 is_Flying = true;
             }
+
         }
-
-
-
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
