@@ -132,7 +132,7 @@ public class RunningMario_completed extends GameEngine {
             if (enemyTests.get(i).isLive) {
                 enemyTests.get(i).run();
                 if (i < 2){
-                    drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                    drawImage(Chestnut[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                 }else{
                     drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                 }
@@ -157,8 +157,9 @@ public class RunningMario_completed extends GameEngine {
     //-------------------------------------------------------
     // Your Program
     //-------------------------------------------------------
-    Image sheet,sheet2,sheet3_Enemy,zhuan1;
+    Image sheet,sheet2,sheet3_Enemy,zhuan1,M1;
     Image background;
+    Image menubackground1;
     Image[] frames,blockQuestion,Chestnut,Turtle;
     Image jumpMario,deadMario;
     Image ChestnutDie;
@@ -606,6 +607,9 @@ public class RunningMario_completed extends GameEngine {
     }
 
 
+    enum GameState {Menu, Options, Play};
+    GameState state = GameState.Menu;
+    int menuOption = 0;
 
     // Initialise the Game
     public void init() {
@@ -624,6 +628,7 @@ public class RunningMario_completed extends GameEngine {
         zhuan1 = loadImage("zhuan1.png");
         sheet3_Enemy = loadImage("AllCharacter.png");
         background = loadImage("MarioBackground.png");
+        menubackground1 = loadImage("menubackground1.png");
         Tube = subImage(sheet2,0,145,35,35);
         for (int i = 0; i < 4; i++) {
             frames[i] = subImage(sheet,16*i,0,16,16);
@@ -749,9 +754,26 @@ public class RunningMario_completed extends GameEngine {
     // tells the program to paint itself
     public void paintComponent() {
         // Clear the background to black
-        changeBackgroundColor(Color.white);
+//        changeBackgroundColor(Color.white);
         clearBackground(width(),height());
+        drawImage(menubackground1,0,0,800,645);
 
+        if(state == GameState.Menu) {
+            // Show Main Menu
+            drawMenu();
+        } else if(state == GameState.Play) {
+            // Show Game
+            drawGame();
+        }
+//        else if(state == GameState.Options) {
+//            // Show Options Menu
+//            drawOptions();
+//        }
+
+
+    }
+
+    public void drawGame(){
         if (!gameover){
             if (is_left)
             {
@@ -853,7 +875,39 @@ public class RunningMario_completed extends GameEngine {
 
 
         V -= 5;
+    }
+    public void drawMenu(){
+        if(menuOption == 0) {
+            changeColor(white);
+            drawText(50, 50, "Play");
+            M1 = subImage(sheet,16,0,16,16);
+            drawImage(M1, 0, 0, 50, 50);
+        } else {
+            changeColor(150, 150, 150);
+            drawText(50, 50, "Play");
+        }
 
+        // Options
+        if(menuOption == 1) {
+            changeColor( white);
+            drawText(50, 100, "Options");
+            M1 = subImage(sheet,16,0,16,16);
+            drawImage(M1, 0, 0, 50, 50);
+        } else {
+            changeColor(150, 150, 150);
+            drawText(50, 100, "Options");
+        }
+
+        // Exit
+        if(menuOption == 2) {
+            changeColor( white);
+            drawText(50, 150, "Exit");
+            M1 = subImage(sheet,16,0,16,16);
+            drawImage(M1, 0, 0, 50, 50);
+        } else {
+            changeColor(150, 150, 150);
+            drawText(50, 150, "Exit");
+        }
     }
     int V = 500;
     Point2D pos = new Point2D.Double();
