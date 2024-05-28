@@ -665,6 +665,7 @@ public class RunningMario_completed extends GameEngine {
         });
 
         hitAnimationThread.start();
+
     }
 
     private void animateTurtle(EnemyTest turtle) {
@@ -711,6 +712,16 @@ public class RunningMario_completed extends GameEngine {
     enum GameState {Menu, Options, Play,Help};
     GameState state = GameState.Menu;
     int menuOption = 0;
+
+    @Override
+    public boolean isCloseRequested() {
+        return false;
+    }
+
+    @Override
+    public void paintComponent(Graphics2D mGraphics) {
+
+    }
 
     // Initialise the Game
     public void init() {
@@ -770,7 +781,12 @@ public class RunningMario_completed extends GameEngine {
         animTime += dt;
 
         checkCollision();
+
         if (is_dead){
+            is_moving = false;
+            is_left = false;
+            is_right = false;
+            is_Flying = false;
             animatemario();
         }
 
@@ -827,11 +843,10 @@ public class RunningMario_completed extends GameEngine {
             if (groundPosition - pos.getY() < 10) {
                 is_Flying = false;
                 rebound = false;
-                pos.setLocation(pos.getX(),groundPosition);
+                pos.setLocation(pos.getX(), groundPosition);
             } else {
-                pos.setLocation(pos.getX(), pos.getY() + upV);
+                pos.setLocation(pos.getX(), Math.min(pos.getY() + upV, groundPosition));
             }
-
         }
 
 
@@ -883,15 +898,21 @@ public class RunningMario_completed extends GameEngine {
 
     public void drawGame(){
         if (!gameover){
-            if (is_left)
+             if (is_left)
             {
                 if (!is_center)
                 {
                     drawImage(background, 0, 0, 10500, 645);
                     drawObstacle();
                     drawEnemy();
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, pos.getX() + 20 * 2, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
                     if(is_Flying || is_jump){
                         drawImage(jumpMario,pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
+
                     }else {
                         if(is_dead){
                             drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
@@ -911,15 +932,17 @@ public class RunningMario_completed extends GameEngine {
                     drawEnemy();
                     timeElapsed++;
                     restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, 250 + 20*2, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
                     if(is_Flying || is_jump){
                         drawImage(jumpMario, 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
+
                     }else {
-                        if(is_dead){
-                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
-                            timereset();
-                        }else {
+
                             drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
-                        }
+
                     }
                     if(pos.getX() <= 250){
                         is_center = false;
@@ -933,15 +956,19 @@ public class RunningMario_completed extends GameEngine {
                     drawImage(block,obstaclePos.getX(),obstaclePos.getY());
                     drawObstacle();
                     drawEnemy();
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
                     if(is_Flying || is_jump){
                         drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+
+
                     }else {
-                        if(is_dead){
-                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
-                            timereset();
-                        }else {
+
                             drawImage(frames[currentFrame], pos.getX(), pos.getY(), 20 * 2, 20 * 2);
-                        }
+
                     }
                     if(pos.getX() >= 250)
                     {
@@ -960,15 +987,18 @@ public class RunningMario_completed extends GameEngine {
                     drawEnemy();
 
                     restoreLastTransform();
+                    if(is_dead){
+                            drawImage(deadMario, 250, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
                     if(is_Flying || is_jump){
                         drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
+
+
                     }else {
-                        if(is_dead){
-                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
-                            timereset();
-                        }else {
+
                             drawImage(frames[currentFrame], 250, pos.getY(), 20 * 2, 20 * 2);
-                        }
+
 
                     }
 
