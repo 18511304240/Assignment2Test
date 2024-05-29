@@ -621,6 +621,9 @@ public class RunningMario_completed extends GameEngine{
     }
 
 
+//    public void gameWin(){
+//
+//    }
 
     private void animateBox(Obstacle i) {
         final int moveDistance = 10;
@@ -1534,14 +1537,69 @@ public class RunningMario_completed extends GameEngine{
     }
 
     public void drawCodex(){
-        changeColor(green);
+        if(menuOption == 0) {
+            changeColor(green);
 //            drawText(200, 350, "Play");
-        drawBoldText(50,100,"Mario","Arial",50);
-        drawBoldText(200,100,"Goomba ","Arial",50);
-        M1 = subImage(sheet,16,0,16,16);
-        drawImage(M1, 50, 120, 100, 100);
-        G1 = subImage(sheet3_Enemy,227,11,16,17);
-        drawImage(G1,250,120,100,100);
+            drawBoldText(50,100,"Mario","Arial",50);
+            drawImage(frames[currentFrame], 50, 120, 100, 100);
+        } else {
+            changeColor(150, 150, 150);
+            drawBoldText(50,100,"Mario","Arial",50);
+            M1 = subImage(sheet,16,0,16,16);
+            drawImage(M1, 50, 120, 100, 100);
+        }
+
+        if(menuOption == 1) {
+            changeColor( green);
+            drawBoldText(300,100,"Goomba ","Arial",50);
+            drawImage(Chestnut[getFrame(0.3,2)],350,120,100,100);
+        } else {
+            changeColor(150, 150, 150);
+            drawBoldText(300,100,"Goomba ","Arial",50);
+            G1 = subImage(sheet3_Enemy,227,11,16,17);
+            drawImage(G1,350,120,100,100);
+        }
+
+        if(menuOption == 2) {
+            changeColor( green);
+            drawBoldText(550,100,"Turtle ","Arial",50);
+            drawImage(Turtle[getFrame(0.3, 2)], 570,120, 100, 100);
+        } else {
+            changeColor(150, 150, 150);
+            drawBoldText(550,100,"Turtle ","Arial",50);
+            drawImage(Turtle[getFrame(0, 0)], 570,120, 100, 100);
+        }
+        if(menuOption == 3) {
+            changeColor( green);
+            drawBoldText(50,370,"Chest ","Arial",50);
+            drawImage(blockQuestion[getFrame(1,3)],80,400,100,100);
+        } else {
+            changeColor(150, 150, 150);
+            drawBoldText(50,370,"Chest ","Arial",50);
+            drawImage(blockQuestion[getFrame(0,0)],80,400,100,100);
+        }
+        if(menuOption == 4) {
+            changeColor( green);
+            drawBoldText(300,370,"Coins ","Arial",50);
+            drawImage(coinsAppear[getFrame(1,3)],320,400,100,100);
+        } else {
+            changeColor(150, 150, 150);
+            drawBoldText(300,370,"Coins ","Arial",50);
+            drawImage(coinsAppear[getFrame(0,0)],320,400,100,100);
+        }
+
+
+
+//            drawText(200, 350, "Play");
+
+
+
+
+
+
+
+
+
 
     }
 
@@ -1669,7 +1727,7 @@ public class RunningMario_completed extends GameEngine{
 
     public void keyPressedCodex(KeyEvent e) {
         // Move up in the menu
-        if(e.getKeyCode() == KeyEvent.VK_UP) {
+        if(e.getKeyCode() == KeyEvent.VK_LEFT) {
             // Add code to move up the menu
             if(menuOption<=3){
                 menuOption--;
@@ -1678,7 +1736,7 @@ public class RunningMario_completed extends GameEngine{
             }
         }
         // Move down in the menu
-        if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+        if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
             // Add code to move down the menu
             if(menuOption<=3){
                 menuOption++;
