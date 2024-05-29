@@ -15,6 +15,7 @@ public class RunningMario_completed extends GameEngine{
         createGame(new RunningMario_completed(),60);
     }
 
+
     public class Obstacle{
         int x;
         int y;
@@ -75,6 +76,13 @@ public class RunningMario_completed extends GameEngine{
         public void run(){
 //get obstacle type
             if(isLive){
+                if (type==3){
+                    if (n==0){
+                    if (newX - x >= 16){
+                        animatemushroom();
+                        n++;
+                    }
+                }}
                 for(Obstacle o : blockList){
                     if(o.getType() == 3){
                         if(this.isRight){
@@ -158,6 +166,8 @@ public class RunningMario_completed extends GameEngine{
                     }else{
                         drawImage(TurtleDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                     }
+                }else if (enemyTests.get(i).getType()==3){
+                    drawImage(mushroom,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,45);
                 }
 
 
@@ -195,11 +205,11 @@ public class RunningMario_completed extends GameEngine{
     //-------------------------------------------------------
     // Your Program
     //-------------------------------------------------------
-    Image sheet,sheet2,sheet3_Enemy,zhuan1,M1,G1;
+    Image sheet,sheet2,sheet3_Enemy,zhuan1,M1,G1,mushroom;
     Image background;
     Image menubackground1;
     Image[] frames,blockQuestion,coinsAppear,Chestnut,Turtle;
-    Image jumpMario,deadMario;
+    Image jumpMario,deadMario,jumpMario1,deadMario1;
     Image ChestnutDie,TurtleDie;
     Image block,Tube,block2,zhuan2;
     int groundPosition;
@@ -212,6 +222,7 @@ public class RunningMario_completed extends GameEngine{
     List<Obstacle> blockList = new ArrayList<>();
     List<EnemyTest> enemyTests = new ArrayList<>();
     AudioClip Title = loadAudio("bgm.wav");
+    int n =0;
 
 
     Obstacle tempObstacle;
@@ -248,7 +259,11 @@ public class RunningMario_completed extends GameEngine{
 
         blockList.add(new Obstacle(1140,390,1));
         blockList.add(new Obstacle(1220,390,2));
-        blockList.add(new Obstacle(1300,390,2));
+
+
+        blockList.add(new Obstacle(1300,390,7));
+
+
 //三管道第一关
         blockList.add(new Obstacle(1500,475,3));
         blockList.add(new Obstacle(1800,475,3));
@@ -455,6 +470,9 @@ public class RunningMario_completed extends GameEngine{
             } else if (o.getType() ==6) {
                 drawImage(coinsAppear[getFrame(1,3)],o.getX(),o.getY(),40,40);
 
+            }else if (o.getType() ==7) {
+                drawImage(blockQuestion[getFrame(1,3)],o.getX(),o.getY(),40,40);
+
             }
         }
     }
@@ -480,7 +498,7 @@ public class RunningMario_completed extends GameEngine{
                     }
                 }
 
-                if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5) {
+                if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5 || s.getType() == 7) {
                     if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()) {
                         is_right = false;
                     } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && (pos.getY() % (s.getY() + 40) < 5)) {
@@ -494,16 +512,12 @@ public class RunningMario_completed extends GameEngine{
                             is_Flying = true;
                             animateBox(s);
                             blockList.add(new Obstacle(s.getX(),s.getY()-50,6));
-//                            coinTimer.schedule(new TimerTask() {
-//                                @Override
-//                                public void run() {
-//                                    // 两秒后执行的操作
-//                                    blockList.remove(coinsAppear);
-//                                    coinTimer.cancel(); // 取消计时器
-//                                }
-//                            }, 2000); // 2000 毫秒即为两秒
                             displayCoins();
-
+                        }else if (s.getType() == 7) {
+                            is_jump = false;
+                            is_Flying = true;
+                            animateBox(s);
+                            enemyTests.add(new EnemyTest(s.getX(),s.getY()-45,3,2,true));
                         } else if (s.getType() == 5) {
                             is_jump = false;
                             is_Flying = true;
@@ -554,7 +568,6 @@ public class RunningMario_completed extends GameEngine{
                 EnemyTest k = enemyTests.get(i);
                 if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
                     if (enemyTests.get(i).isLive) {
-                        score += 50;
                         if (enemyTests.get(i).getType() == 2) {
                             if (!enemyTests.get(i).Turtleisdie) {
                                 rebound = true;
@@ -568,6 +581,7 @@ public class RunningMario_completed extends GameEngine{
                                 }
                             } else if (!enemyTests.get(i).isAnimating()) {
                                 animateTurtle(k);
+
                                 rebound = true;
                             }
                         } else {
@@ -581,7 +595,11 @@ public class RunningMario_completed extends GameEngine{
                 }
                 if (!is_Flying && pos.getY() == enemyTests.get(i).getY() && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
                     if (enemyTests.get(i).isLive) {
-                        is_dead = true;
+                        if (enemyTests.get(i).getType()==3){
+                            Tobebig = true;
+                        }else {
+                            is_dead = true;
+                        }
 
                     }
                 }
@@ -629,23 +647,84 @@ public class RunningMario_completed extends GameEngine{
         });
         animationThread.start();
     }
+    private void animatemushroom() {
+        for (int i = 0, len = enemyTests.size(); i < len; i++) {
+            if (enemyTests.get(i).getType() == 3) {
+        final int moveSpeed = 5;
+        final int returnSpeed = 2;
+        int initialY = enemyTests.get(i).getY();
+                EnemyTest k = enemyTests.get(i);
 
-    public void displayCoins(){
+        Thread animationThread = new Thread(() -> {
+            int currentY = k.getY();
+            int targetY = groundPosition;
+
+            // Drop the enemy
+            while (k.getY() < targetY) {
+                k.setY(k.getY() + moveSpeed);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            k.setY(targetY);
+
+        });
+
+        animationThread.start();
+    }}}
+
+    public void displayCoins() {
         Timer coinTimer = new Timer();
+
         for (int i = 0; i < blockList.size(); i++) {
             Obstacle c = blockList.get(i);
-            if (c.getType()==6) {
+            if (c.getType() == 6) {
+                animateCoin(c);
                 coinTimer.schedule(new TimerTask() {
 
                     @Override
                     public void run() {
-                        // 0.8s后执行的操作
                         blockList.remove(c);
-                        coinTimer.cancel(); // 取消计时器
                     }
-                }, 800); // 800 毫秒即为0.8秒
+                }, 1200);
             }
         }
+    }
+
+    private void animateCoin(Obstacle coin) {
+        final int moveDistance = 30;
+        final int speed = 2;
+        final int delay = 30;
+
+        Thread animationThread = new Thread(() -> {
+            int initialY = coin.getY();
+            int targetY = initialY - moveDistance;
+
+
+            while (coin.getY() > targetY) {
+                coin.setY(coin.getY() - speed);
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            while (coin.getY() < initialY) {
+                coin.setY(coin.getY() + speed);
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            coin.setY(initialY);
+        });
+        animationThread.start();
     }
     public void timereset(){
         Timer timer = new Timer();
@@ -710,7 +789,7 @@ public class RunningMario_completed extends GameEngine{
 
     private void animateTurtle(EnemyTest turtle) {
         final int riseDistance = 20; // 上升的距离
-        final int fallSpeed = 5; // 下落的速度
+        final int fallSpeed = 10; // 下落的速度
         final int fallDistance = 600; // 下落的总距离，假设屏幕高度为600
         int initialY = turtle.getY();
 
@@ -807,6 +886,7 @@ public class RunningMario_completed extends GameEngine{
         }
         deadMario = subImage(sheet,96,0,16,16);
         jumpMario = subImage(sheet,80,0,16,16);
+        jumpMario1 = subImage(sheet,80,0,16,16);
         for(int i = 0; i < 2;i++){
             Chestnut[i] = subImage(sheet3_Enemy,227 + i * 16,11,16,17);
         }
@@ -815,6 +895,10 @@ public class RunningMario_completed extends GameEngine{
         }
         ChestnutDie = subImage(sheet3_Enemy,259,19,15,8);
         TurtleDie = subImage(sheet3_Enemy,402,19,16,35);
+
+            mushroom = subImage(sheet3_Enemy,434 ,29,35,35);
+
+
 
         groundPosition = 550 - 38;
         pos.setLocation(100,groundPosition);
@@ -955,8 +1039,11 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else
                     if(is_Flying || is_jump){
-                        drawImage(jumpMario,pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
-
+                        if (!Tobebig) {
+                            drawImage(jumpMario, pos.getX() + 20 * 2, pos.getY(), -20 * 2, 20 * 2);
+                        }else {
+                            drawImage(jumpMario1, pos.getX() + 20 * 2, pos.getY(), -20 * 4, 20 * 4);
+                        }
                     }else {
                         if(is_dead){
                             drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
@@ -981,8 +1068,11 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else
                     if(is_Flying || is_jump){
-                        drawImage(jumpMario, 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
-
+                        if (!Tobebig) {
+                            drawImage(jumpMario, 250 + 20 * 2, pos.getY(), -20 * 2, 20 * 2);
+                        }else {
+                            drawImage(jumpMario1, pos.getX() + 20 * 2, pos.getY(), -20 * 4, 20 * 4);
+                        }
                     }else {
 
                             drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
@@ -1006,8 +1096,11 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else
                     if(is_Flying || is_jump){
-                        drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
-
+                        if (!Tobebig) {
+                            drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                        }else {
+                            drawImage(jumpMario1, pos.getX() + 20 * 2, pos.getY(), -20 * 4, 20 * 4);
+                        }
 
                     }else {
 
@@ -1036,8 +1129,11 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else
                     if(is_Flying || is_jump){
-                        drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
-
+                        if (!Tobebig) {
+                            drawImage(jumpMario, 250, pos.getY(), 20 * 2, 20 * 2);
+                        }else {
+                            drawImage(jumpMario1, pos.getX() + 20 * 2, pos.getY(), -20 * 4, 20 * 4);
+                        }
 
                     }else {
 
@@ -1123,6 +1219,7 @@ public class RunningMario_completed extends GameEngine{
     boolean on_obstacle = false;
     boolean rebound = false;
     boolean is_dead = false;
+    boolean Tobebig = false;
     int upV;
 
     @Override
