@@ -196,7 +196,7 @@ public class RunningMario_completed extends GameEngine{
     // Your Program
     //-------------------------------------------------------
     Image sheet,sheet2,sheet3_Enemy,zhuan1,M1,G1;
-    Image background;
+    Image background,MarioDesert,MarioSkyCity;
     Image menubackground1;
     Image[] frames,blockQuestion,coinsAppear,Chestnut,Turtle;
     Image jumpMario,deadMario;
@@ -364,36 +364,36 @@ public class RunningMario_completed extends GameEngine{
         for (int i=0;i<3;i++){
             blockList.add(new Obstacle(7120,515-i*40,1));
         }
-        for (int i=0;i<3;i++){
-            blockList.add(new Obstacle(7160,515-i*40,1));
-        }
-        for (int i=0;i<3;i++){
-            blockList.add(new Obstacle(7200,515-i*40,1));
-        }
+//        for (int i=0;i<3;i++){
+//            blockList.add(new Obstacle(7160,515-i*40,1));
+//        }
+//        for (int i=0;i<3;i++){
+//            blockList.add(new Obstacle(7200,515-i*40,1));
+//        }
         for (int i=0;i<4;i++){
             blockList.add(new Obstacle(7240,515-i*40,1));
         }
         for (int i=0;i<5;i++){
             blockList.add(new Obstacle(7360,515-i*40,1));
         }
-        for (int i=0;i<5;i++){
-            blockList.add(new Obstacle(7400,515-i*40,1));
-        }
-        for (int i=0;i<5;i++){
-            blockList.add(new Obstacle(7440,515-i*40,1));
-        }
+//        for (int i=0;i<5;i++){
+//            blockList.add(new Obstacle(7400,515-i*40,1));
+//        }
+//        for (int i=0;i<5;i++){
+//            blockList.add(new Obstacle(7440,515-i*40,1));
+//        }
         for (int i=0;i<6;i++){
             blockList.add(new Obstacle(7480,515-i*40,1));
         }
         for (int i=0;i<7;i++){
             blockList.add(new Obstacle(7600,515-i*40,1));
         }
-        for (int i=0;i<7;i++){
-            blockList.add(new Obstacle(7640,515-i*40,1));
-        }
-        for (int i=0;i<7;i++){
-            blockList.add(new Obstacle(7680,515-i*40,1));
-        }
+//        for (int i=0;i<7;i++){
+//            blockList.add(new Obstacle(7640,515-i*40,1));
+//        }
+//        for (int i=0;i<7;i++){
+//            blockList.add(new Obstacle(7680,515-i*40,1));
+//        }
         for (int i=0;i<8;i++){
             blockList.add(new Obstacle(7720,515-i*40,1));
         }
@@ -793,7 +793,19 @@ public class RunningMario_completed extends GameEngine{
         sheet2 = loadImage("Obstacle.png");
         zhuan1 = loadImage("zhuan1.png");
         sheet3_Enemy = loadImage("AllCharacter.png");
-        background = loadImage("MarioBackground.png");
+//        if (pos.getX()<500 ) {
+            background = loadImage("MarioBackground.png");
+//        } else if (pos.getX()>500) {
+            MarioDesert = loadImage("MarioDesert.png");
+//        }
+        MarioSkyCity = loadImage("MarioSkyCity.png");
+        // 检查图片是否加载成功
+//        if (background == null) {
+//            System.out.println("Error: MarioBackground.png not loaded");
+//        }
+//        if (MarioDesert == null) {
+//            System.out.println("Error: MarioDesert.png not loaded");
+//        }
         menubackground1 = loadImage("menubackground1.png");
         Tube = subImage(sheet2,0,145,35,35);
         for (int i = 0; i < 4; i++) {
@@ -926,12 +938,21 @@ public class RunningMario_completed extends GameEngine{
         clearBackground(width(),height());
         drawImage(menubackground1,0,0,800,645);
 
+
         if(state == GameState.Menu) {
             // Show Main Menu
             drawMenu();
         } else if(state == GameState.Play) {
             // Show Game
-            drawGame();
+            if (pos.getX()>4620 && pos.getX()<6700) {
+                drawGameDesert();
+
+            }else if (pos.getX()>7380 && pos.getX()<9000){
+//                drawGame();
+                drawGameSky();
+            }else {
+                drawGame();
+            }
         } else if (state == GameState.Help) {
             drawHelp();
         }
@@ -949,7 +970,12 @@ public class RunningMario_completed extends GameEngine{
             {
                 if (!is_center)
                 {
-                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+//                        drawImage(MarioDesert, 0, 0, 10500, 645);
+
+//                    }
                     drawObstacle();
                     drawEnemy();
                     restoreLastTransform();
@@ -974,7 +1000,13 @@ public class RunningMario_completed extends GameEngine{
                     saveCurrentTransform();
                     translate(-pos.getX()+250,0);
 
-                    drawImage(background, 0, 0, 10500, 645);
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+//                        drawImage(MarioDesert, 0, 0, 10500, 645);
+
+//                    }
                     drawObstacle();
                     drawEnemy();
                     timeElapsed++;
@@ -999,7 +1031,13 @@ public class RunningMario_completed extends GameEngine{
             else
             {
                 if (!is_center) {
-                    drawImage(background, 0, 0, 10500, 645);
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+//                        drawImage(MarioDesert, 0, 0, 10500, 645);
+//
+//                    }
                     drawImage(block,obstaclePos.getX(),obstaclePos.getY());
                     drawObstacle();
                     drawEnemy();
@@ -1027,7 +1065,13 @@ public class RunningMario_completed extends GameEngine{
                 {
                     saveCurrentTransform();
                     translate(-pos.getX()+250,0);
-                    drawImage(background, 0, 0, 10500, 645);
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+//                        drawImage(MarioDesert, 0, 0, 10500, 645);
+//
+//                    }
 
                     drawImage(blockQuestion[getFrame(1,3)],200,50,32,32);
                     drawObstacle();
@@ -1063,6 +1107,294 @@ public class RunningMario_completed extends GameEngine{
 
         V -= 5;
     }
+
+    public void drawGameDesert(){
+        if (!gameover){
+            if (is_left)
+            {
+                if (!is_center)
+                {
+//                    if (pos.getX()<500 ) {
+//                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+                    drawImage(MarioDesert, 0, 0, 10500, 645);
+
+//                    }
+                    drawObstacle();
+                    drawEnemy();
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, pos.getX() + 20 * 2, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario,pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
+
+                    }else {
+                        if(is_dead){
+                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                            timereset();
+                        }else {
+                            drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
+                        }
+                    }
+                }
+                else
+                {
+                    saveCurrentTransform();
+                    translate(-pos.getX()+250,0);
+
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+//                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+                    drawImage(MarioDesert, 0, 0, 10500, 645);
+
+//                    }
+                    drawObstacle();
+                    drawEnemy();
+                    timeElapsed++;
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, 250 + 20*2, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario, 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
+
+                    }else {
+
+                        drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
+
+                    }
+                    if(pos.getX() <= 250){
+                        is_center = false;
+                    }
+                }
+            }
+            else
+            {
+                if (!is_center) {
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+//                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+                    drawImage(MarioDesert, 0, 0, 10500, 645);
+//
+//                    }
+                    drawImage(block,obstaclePos.getX(),obstaclePos.getY());
+                    drawObstacle();
+                    drawEnemy();
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+
+
+                    }else {
+
+                        drawImage(frames[currentFrame], pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+
+                    }
+                    if(pos.getX() >= 250)
+                    {
+                        is_center = true;
+                    }
+
+                }
+                else
+                {
+                    saveCurrentTransform();
+                    translate(-pos.getX()+250,0);
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+//                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+                    drawImage(MarioDesert, 0, 0, 10500, 645);
+//
+//                    }
+
+                    drawImage(blockQuestion[getFrame(1,3)],200,50,32,32);
+                    drawObstacle();
+                    drawEnemy();
+
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, 250, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
+
+
+                    }else {
+
+                        drawImage(frames[currentFrame], 250, pos.getY(), 20 * 2, 20 * 2);
+
+
+                    }
+
+                }
+            }
+            changeColor(green);
+            drawBoldText(50,50,"score:"+score,"Arial", 30);
+        }else{
+            changeColor(white);
+            drawBoldText(80, 300, "GAME OVER!", "Arial", 100);
+            drawText(60, 500, "Press Space to quit the game!", "Arial", 50);
+        }
+
+
+
+        V -= 5;
+    }
+    public void drawGameSky(){
+        if (!gameover){
+            if (is_left)
+            {
+                if (!is_center)
+                {
+//                    if (pos.getX()<500 ) {
+//                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+                    drawImage(MarioSkyCity, 0, 0, 10500, 645);
+
+//                    }
+                    drawObstacle();
+                    drawEnemy();
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, pos.getX() + 20 * 2, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario,pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
+
+                    }else {
+                        if(is_dead){
+                            drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                            timereset();
+                        }else {
+                            drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
+                        }
+                    }
+                }
+                else
+                {
+                    saveCurrentTransform();
+                    translate(-pos.getX()+250,0);
+
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+//                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+                    drawImage(MarioSkyCity, 0, 0, 10500, 645);
+
+//                    }
+                    drawObstacle();
+                    drawEnemy();
+                    timeElapsed++;
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, 250 + 20*2, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario, 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
+
+                    }else {
+
+                        drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
+
+                    }
+                    if(pos.getX() <= 250){
+                        is_center = false;
+                    }
+                }
+            }
+            else
+            {
+                if (!is_center) {
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+//                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+                    drawImage(MarioSkyCity, 0, 0, 10500, 645);
+//
+//                    }
+                    drawImage(block,obstaclePos.getX(),obstaclePos.getY());
+                    drawObstacle();
+                    drawEnemy();
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+
+
+                    }else {
+
+                        drawImage(frames[currentFrame], pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+
+                    }
+                    if(pos.getX() >= 250)
+                    {
+                        is_center = true;
+                    }
+
+                }
+                else
+                {
+                    saveCurrentTransform();
+                    translate(-pos.getX()+250,0);
+//                    drawImage(background, 0, 0, 10500, 645);
+//                    if (pos.getX()<500 ) {
+//                        drawImage(background, 0, 0, 10500, 645);
+//                    } else if (pos.getX()>500) {
+                    drawImage(MarioSkyCity, 0, 0, 10500, 645);
+//
+//                    }
+
+                    drawImage(blockQuestion[getFrame(1,3)],200,50,32,32);
+                    drawObstacle();
+                    drawEnemy();
+
+                    restoreLastTransform();
+                    if(is_dead){
+                        drawImage(deadMario, 250, pos.getY(), 20 * 2, 20 * 2);
+                        timereset();
+                    }else
+                    if(is_Flying || is_jump){
+                        drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
+
+
+                    }else {
+
+                        drawImage(frames[currentFrame], 250, pos.getY(), 20 * 2, 20 * 2);
+
+
+                    }
+
+                }
+            }
+            changeColor(green);
+            drawBoldText(50,50,"score:"+score,"Arial", 30);
+        }else{
+            changeColor(white);
+            drawBoldText(80, 300, "GAME OVER!", "Arial", 100);
+            drawText(60, 500, "Press Space to quit the game!", "Arial", 50);
+        }
+
+
+
+        V -= 5;
+    }
+
     public void drawMenu(){
         if(menuOption == 0) {
             changeColor(white);
