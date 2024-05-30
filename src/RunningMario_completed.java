@@ -174,7 +174,7 @@ public class RunningMario_completed extends GameEngine{
                         drawImage(TurtleDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                     }
                 }else if (enemyTests.get(i).getType()==3){
-                    drawImage(mushroom,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),50,50);
+                    drawImage(mushroom,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),70,70);
                 }else if (enemyTests.get(i).getType()==4){
                     drawImage(Chomper[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                 }
@@ -665,29 +665,32 @@ public class RunningMario_completed extends GameEngine{
                 }
                 if (!is_Flying && pos.getY() == enemyTests.get(i).getY() && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
                     if (enemyTests.get(i).isLive) {
-                        if (enemyTests.get(i).getType()==3){
-                            Tobebig = true;
-                            Turnback = true;
-                            enemyTests.remove(enemyTests.get(i));
-                        }else {
-                            if (!Turnback){
+
+                            if (!Turnback) {
                                 is_dead = true;
-                            }else {
+                                System.out.println("2");
+                            } else {
                                 Tobebig = false;
                                 timerturnback();
+                                System.out.println("3");
                             }
 
 
                     }
                 }
-
-
-
+                if (!is_Flying && pos.getY() + 60 > enemyTests.get(i).getY() && pos.getY() -60 < enemyTests.get(i).getY() && pos.getX() + 60 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 60) {
+                    if (enemyTests.get(i).getType() == 3) {
+                        Tobebig = true;
+                        pos.setLocation(pos.getX(), pos.getY() - 40);
+                        Turnback = true;
+                        enemyTests.remove(enemyTests.get(i));
+                        System.out.println("4");
+                    }
                 }
 
+            }
 
-        }
-    }
+                }
 }
 
 
@@ -764,7 +767,7 @@ public class RunningMario_completed extends GameEngine{
 
         Thread animationThread = new Thread(() -> {
             int currentY = k.getY();
-            int targetY = groundPosition;
+            int targetY = groundPosition-22;
 
             // Drop the enemy
             while (k.getY() < targetY) {
@@ -1078,7 +1081,8 @@ public class RunningMario_completed extends GameEngine{
 
 
         groundPosition = 550 - 38;
-        pos.setLocation(100,groundPosition);
+        Tobebig = true;
+        pos.setLocation(9000,groundPosition);
         designEnemy();
         designObstacle();
 
