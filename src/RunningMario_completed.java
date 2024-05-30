@@ -372,49 +372,49 @@ public class RunningMario_completed extends GameEngine{
         blockList.add(new Obstacle(6660,355,4));
 
         //天梯
-        blockList.add(new Obstacle(6960,515,1));
-        for (int i=0;i<2;i++){
-            blockList.add(new Obstacle(7000,515-i*40,1));
-        }
-        for (int i=0;i<3;i++){
-            blockList.add(new Obstacle(7120,515-i*40,1));
-        }
-//        for (int i=0;i<3;i++){
-//            blockList.add(new Obstacle(7160,515-i*40,1));
+//        blockList.add(new Obstacle(6960,515,1));
+//        for (int i=0;i<2;i++){
+//            blockList.add(new Obstacle(7000,515-i*40,1));
 //        }
 //        for (int i=0;i<3;i++){
-//            blockList.add(new Obstacle(7200,515-i*40,1));
+//            blockList.add(new Obstacle(7120,515-i*40,1));
 //        }
-        for (int i=0;i<4;i++){
-            blockList.add(new Obstacle(7240,515-i*40,1));
-        }
-        for (int i=0;i<5;i++){
-            blockList.add(new Obstacle(7360,515-i*40,1));
-        }
+////        for (int i=0;i<3;i++){
+////            blockList.add(new Obstacle(7160,515-i*40,1));
+////        }
+////        for (int i=0;i<3;i++){
+////            blockList.add(new Obstacle(7200,515-i*40,1));
+////        }
+//        for (int i=0;i<4;i++){
+//            blockList.add(new Obstacle(7240,515-i*40,1));
+//        }
 //        for (int i=0;i<5;i++){
-//            blockList.add(new Obstacle(7400,515-i*40,1));
+//            blockList.add(new Obstacle(7360,515-i*40,1));
 //        }
-//        for (int i=0;i<5;i++){
-//            blockList.add(new Obstacle(7440,515-i*40,1));
-//        }
-        for (int i=0;i<6;i++){
-            blockList.add(new Obstacle(7480,515-i*40,1));
-        }
-        for (int i=0;i<7;i++){
-            blockList.add(new Obstacle(7600,515-i*40,1));
-        }
-//        for (int i=0;i<7;i++){
-//            blockList.add(new Obstacle(7640,515-i*40,1));
+////        for (int i=0;i<5;i++){
+////            blockList.add(new Obstacle(7400,515-i*40,1));
+////        }
+////        for (int i=0;i<5;i++){
+////            blockList.add(new Obstacle(7440,515-i*40,1));
+////        }
+//        for (int i=0;i<6;i++){
+//            blockList.add(new Obstacle(7480,515-i*40,1));
 //        }
 //        for (int i=0;i<7;i++){
-//            blockList.add(new Obstacle(7680,515-i*40,1));
+//            blockList.add(new Obstacle(7600,515-i*40,1));
 //        }
-        for (int i=0;i<8;i++){
-            blockList.add(new Obstacle(7720,515-i*40,1));
-        }
-        for (int i=0;i<8;i++){
-            blockList.add(new Obstacle(7760,515-i*40,1));
-        }
+////        for (int i=0;i<7;i++){
+////            blockList.add(new Obstacle(7640,515-i*40,1));
+////        }
+////        for (int i=0;i<7;i++){
+////            blockList.add(new Obstacle(7680,515-i*40,1));
+////        }
+//        for (int i=0;i<8;i++){
+//            blockList.add(new Obstacle(7720,515-i*40,1));
+//        }
+//        for (int i=0;i<8;i++){
+//            blockList.add(new Obstacle(7760,515-i*40,1));
+//        }
 
 
 
@@ -496,8 +496,15 @@ public class RunningMario_completed extends GameEngine{
                         is_left = false;
                         break;
                     }
-                }
 
+                    if (Tobebig) {
+                        if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && Math.abs(s.getY() - (pos.getY() + 80)) < 10) {
+                            on_obstacle = true;
+                            tempObstacle = s;
+                            break;
+                        }
+                    }
+                }
                 if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5 || s.getType() == 7) {
                     if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()) {
                         is_right = false;
@@ -539,7 +546,14 @@ public class RunningMario_completed extends GameEngine{
                     } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(s.getY() - (pos.getY() + 40)) < 10) {
                         on_obstacle = true;
                         tempObstacle = s;
-                        System.out.println(s.getY() - (pos.getY() + 40));
+                    }
+
+                    if (Tobebig) {
+                        if (pos.getX() + 40 >= s.getX() && pos.getX() <= s.getX() + 80 && Math.abs(s.getY() - (pos.getY() + 80)) < 15) {
+                            on_obstacle = true;
+                            tempObstacle = s;
+                            break;
+                        }
                     }
                 }
             }
@@ -606,8 +620,10 @@ public class RunningMario_completed extends GameEngine{
                     if (enemyTests.get(i).isLive) {
                         if (enemyTests.get(i).getType()==3){
                             Tobebig = true;
+                            pos.setLocation(pos.getX(),pos.getY() - 40);
                             Turnback = true;
                             enemyTests.remove(enemyTests.get(i));
+//                            checkCollisionBig();
                         }else {
                             if (!Turnback){
                                 is_dead = true;
@@ -628,6 +644,148 @@ public class RunningMario_completed extends GameEngine{
         }
     }
 
+//    public void checkCollisionBig(){
+//        Timer coinTimer = new Timer();
+//
+//        if (!is_dead){
+//            for (int i = 0; i < blockList.size(); i++) {
+//                Obstacle s = blockList.get(i);
+//                if (s.getType() == 3) {
+//                    if (pos.getX() + 40 == s.getX() && s.getY() < pos.getY() + 80) {
+//                        is_right = false;
+//                        break;
+//                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 80 && Math.abs(s.getY() - (pos.getY() + 80)) < 10) {
+//                        on_obstacle = true;
+//                        tempObstacle = s;
+//                        break;
+//                    } else if (pos.getX() == s.getX() + 80 && s.getY() < pos.getY() + 80) {
+//                        is_left = false;
+//                        break;
+//                    }
+//                }
+//
+//                if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5 || s.getType() == 7) {
+//                    if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()) {
+//                        is_right = false;
+//                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(pos.getY() - (s.getY() + 40)) < 10) {
+//                        if (s.getType() == 1) {
+//                            is_jump = false;
+//                            is_Flying = true;
+//                            animateBox(s);
+//                        } else if (s.getType() == 2) {
+//                            score += 100;
+//                            is_jump = false;
+//                            is_Flying = true;
+//                            animateBox(s);
+//                            blockList.add(new Obstacle(s.getX(),s.getY()-50,6));
+////                            coinTimer.schedule(new TimerTask() {
+////                                @Override
+////                                public void run() {
+////                                    // 两秒后执行的操作
+////                                    blockList.remove(coinsAppear);
+////                                    coinTimer.cancel(); // 取消计时器
+////                                }
+////                            }, 2000); // 2000 毫秒即为两秒
+//                            displayCoins();
+//                        }else if (s.getType() == 7) {
+//                            is_jump = false;
+//                            is_Flying = true;
+//                            animateBox(s);
+//                            enemyTests.add(new EnemyTest(s.getX(),s.getY()-45,3,2,true));
+//                        } else if (s.getType() == 5) {
+//                            is_jump = false;
+//                            is_Flying = true;
+//                            blockList.remove(i);
+//                        } else if (s.getType() ==4 ) {
+//                            is_jump = false;
+//                            is_Flying = true;
+//                        }
+//                    } else if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && Math.abs(pos.getX() - (s.getX() + 40)) < 10) {
+//                        is_left = false;
+//                    } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(s.getY() - (pos.getY() + 80)) < 10) {
+//                        on_obstacle = true;
+//                        tempObstacle = s;
+//                        System.out.println(s.getY() - (pos.getY() + 80));
+//
+//
+//                    }
+//                }
+//            }
+//
+//            if (on_obstacle) {
+//                if (tempObstacle.getType() == 3) {
+//                    if ((pos.getX() > tempObstacle.getX() + 80)) {
+//                        on_obstacle = false;
+//                        is_Flying = true;
+//                    } else if ((pos.getX() + 40) < tempObstacle.getX()) {
+//                        System.out.println(pos.getX());
+//                        System.out.println(tempObstacle.getX());
+//                        on_obstacle = false;
+//                        is_Flying = true;
+//                    } else if (is_jump) {
+//                        on_obstacle = false;
+//                    }
+//                } else if (tempObstacle.getType() == 1 || tempObstacle.getType() == 2 || tempObstacle.getType() == 4 || tempObstacle.getType() == 5) {
+//                    if ((pos.getX() > tempObstacle.getX() + 40)) {
+//                        on_obstacle = false;
+//                        is_Flying = true;
+//                    } else if ((pos.getX() + 40) < tempObstacle.getX()) {
+//                        System.out.println(pos.getX());
+//                        System.out.println(tempObstacle.getX());
+//                        on_obstacle = false;
+//                        is_Flying = true;
+//                    } else if (is_jump) {
+//                        on_obstacle = false;
+//                    }
+//                }
+//
+//            }
+//
+//            for (int i = 0, len = enemyTests.size(); i < len; i++) {
+//                EnemyTest k = enemyTests.get(i);
+//                if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 80) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
+//                    if (enemyTests.get(i).isLive) {
+//                        score += 50;
+//                        if (enemyTests.get(i).getType() == 2) {
+//                            if (!enemyTests.get(i).Turtleisdie) {
+//                                rebound = true;
+//                                enemyTests.get(i).Turtleisdie = true;
+//                                if (pos.getX() + 20 < enemyTests.get(i).getNewX()) {
+//                                    enemyTests.get(i).isRight = true;
+//                                    enemyTests.get(i).v = Math.abs(enemyTests.get(i).v);
+//                                } else {
+//                                    enemyTests.get(i).isRight = false;
+//                                    enemyTests.get(i).v = -Math.abs(enemyTests.get(i).v);
+//                                }
+//                            } else if (!enemyTests.get(i).isAnimating()) {
+//                                animateTurtle(k);
+//                                rebound = true;
+//                            }
+//                        } else {
+//                            rebound = true;
+//                            enemyTests.get(i).setLive(false);
+//                        }
+//                    } else if (enemyTests.get(i).getType() == 2 && !enemyTests.get(i).isAnimating()) {
+//                        animateTurtle(k);
+//                    }
+//
+//                }
+//                if (!is_Flying && pos.getY() == enemyTests.get(i).getY() && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
+//                    if (enemyTests.get(i).isLive) {
+//                        if (enemyTests.get(i).getType()==3){
+//                            Tobebig = true;
+//                        }else {
+//                            is_dead = true;
+//                        }
+//
+//                    }
+//                }
+//
+//            }
+//
+//
+//        }
+//    }
 
 //    public void gameWin(){
 //
@@ -964,7 +1122,11 @@ public class RunningMario_completed extends GameEngine{
         // Update Function
         animTime += dt;
 
-        checkCollision();
+//        if (!Tobebig) {
+            checkCollision();
+//        }else {
+//            checkCollisionBig();
+//        }
 
         if (is_dead){
             is_moving = false;
@@ -1028,18 +1190,34 @@ public class RunningMario_completed extends GameEngine{
 
         if (on_obstacle) {
             is_Flying = false;
-            pos.setLocation(pos.getX(),tempObstacle.getY()-40);
+            if(!Tobebig){
+                pos.setLocation(pos.getX(),tempObstacle.getY()-40);
+            }else {
+                pos.setLocation(pos.getX(),tempObstacle.getY()-80);
+            }
+
         }
 
         if (is_Flying && !is_jump && !rebound) {
             upTime = 0;
-            if (groundPosition - pos.getY() < 10) {
-                is_Flying = false;
-                rebound = false;
-                pos.setLocation(pos.getX(), groundPosition);
-            } else {
-                pos.setLocation(pos.getX(), Math.min(pos.getY() + upV, groundPosition));
+            if(!Tobebig){
+                if (groundPosition - pos.getY() < 10) {
+                    is_Flying = false;
+                    rebound = false;
+                    pos.setLocation(pos.getX(), groundPosition);
+                } else {
+                    pos.setLocation(pos.getX(), Math.min(pos.getY() + upV, groundPosition));
+                }
+            }else {
+                if (groundPosition - 40 - pos.getY() < 10) {
+                    is_Flying = false;
+                    rebound = false;
+                    pos.setLocation(pos.getX(), groundPosition - 40);
+                } else {
+                    pos.setLocation(pos.getX(), Math.min(pos.getY() + upV, groundPosition - 40));
+                }
             }
+
         }
 
 
@@ -1159,7 +1337,7 @@ public class RunningMario_completed extends GameEngine{
                         if (!Tobebig){
                             drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
                         }else {
-                            drawImage(bigframes[currentFrame1], 250 + 20*2, pos.getY()-40, -20 * 2, 20 * 4);
+                            drawImage(bigframes[currentFrame1], 250 + 20*2, pos.getY(), -20 * 2, 20 * 4);
                         }
 
 
@@ -1199,7 +1377,7 @@ public class RunningMario_completed extends GameEngine{
                         if (!Tobebig){
                             drawImage(frames[currentFrame], pos.getX(), pos.getY(), 20 * 2, 20 * 2);
                         }else {
-                            drawImage(bigframes[currentFrame1], pos.getX(), pos.getY()-40, 20 * 2, 20 * 4);
+                            drawImage(bigframes[currentFrame1], pos.getX(), pos.getY(), 20 * 2, 20 * 4);
                         }
 
                     }
@@ -1243,7 +1421,7 @@ public class RunningMario_completed extends GameEngine{
                         if (!Tobebig){
                             drawImage(frames[currentFrame], 250, pos.getY(), 20 * 2, 20 * 2);
                         }else {
-                            drawImage(bigframes[currentFrame1], 250, pos.getY()-40, 20 * 2, 20 * 4);
+                            drawImage(bigframes[currentFrame1], 250, pos.getY(), 20 * 2, 20 * 4);
                         }
 
 
@@ -1511,7 +1689,6 @@ public class RunningMario_completed extends GameEngine{
                             drawImage(jumpMario1, 250 + 20*2, pos.getY(), -20 * 2, 20 * 4);
                         }
 
-
                     }else {
                         if (!Tobebig){
                             drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
@@ -1545,11 +1722,11 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else
                     if(is_Flying || is_jump){
-                       if (!Tobebig){
-                           drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
-                       }else {
-                           drawImage(jumpMario1, pos.getX(), pos.getY(), 20 * 2, 20 * 4);
-                       }
+                        if (!Tobebig){
+                            drawImage(jumpMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
+                        }else {
+                            drawImage(jumpMario1, pos.getX(), pos.getY(), 20 * 2, 20 * 4);
+                        }
 
 
                     }else {
@@ -1589,11 +1766,12 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else
                     if(is_Flying || is_jump){
-                        if (!Tobebig) {
-                            drawImage(jumpMario, 250, pos.getY(), 20 * 2, 20 * 2);
+                        if (!Tobebig){
+                            drawImage(jumpMario,250, pos.getY(), 20 * 2, 20 * 2);
                         }else {
-                            drawImage(jumpMario1, pos.getX() + 20 * 2, pos.getY(), -20 * 4, 20 * 4);
+                            drawImage(jumpMario1,250, pos.getY(), 20 * 2, 20 * 4);
                         }
+
 
                     }else {
                         if (!Tobebig){
@@ -1619,6 +1797,7 @@ public class RunningMario_completed extends GameEngine{
 
 
         V -= 5;
+
     }
 
     public void drawMenu(){
