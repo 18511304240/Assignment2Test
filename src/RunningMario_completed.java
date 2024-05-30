@@ -216,9 +216,10 @@ public class RunningMario_completed extends GameEngine{
     //-------------------------------------------------------
     Image sheet,sheet2,sheet3_Enemy,zhuan1,M1,G1,mushroom,flag,flagpole,castle,winpicture,Chomperopen,Chomperclose,flower;
     Image background,MarioDesert,MarioSkyCity;
-    Image menubackground1,menubackground2;
+    Image menubackground1,menubackground2,KeyButtons;
     Image[] frames,blockQuestion,coinsAppear,Chestnut,Turtle,bigframes,Chomper;
     Image jumpMario,deadMario,jumpMario1,flagMario,flagMario1;
+
     Image ChestnutDie,TurtleDie;
     Image block,Tube,block2,zhuan2;
     int groundPosition;
@@ -572,6 +573,14 @@ public class RunningMario_completed extends GameEngine{
                             is_Flying = true;
                             animateBox(s);
                             blockList.add(new Obstacle(s.getX(),s.getY()-50,6));
+//                            coinTimer.schedule(new TimerTask() {
+//                                @Override
+//                                public void run() {
+//                                    // 两秒后执行的操作
+//                                    blockList.remove(coinsAppear);
+//                                    coinTimer.cancel(); // 取消计时器
+//                                }
+//                            }, 2000); // 2000 毫秒即为两秒
                             displayCoins();
                         }else if (s.getType() == 7) {
                             is_jump = false;
@@ -667,12 +676,14 @@ public class RunningMario_completed extends GameEngine{
                     if (enemyTests.get(i).isLive) {
                         if (enemyTests.get(i).getType()==3){
                             Tobebig = true;
+                            pos.setLocation(pos.getX(),pos.getY() - 40);
                             Turnback = true;
                             enemyTests.remove(enemyTests.get(i));
+//                            checkCollisionBig();
                         }else {
-                            if (!Turnback){
+                            if (!Turnback) {
                                 is_dead = true;
-                            }else {
+                            } else {
                                 Tobebig = false;
                                 timerturnback();
                             }
@@ -978,9 +989,13 @@ public class RunningMario_completed extends GameEngine{
         deathAnimationThread.start();
     }
 
-    enum GameState {Menu, Codex, Play,Help};
+    enum GameState {Menu, Codex, Play, Help,Options};
+    enum Difficulty {Easy, Medium, Hard};
+    Difficulty difficulty = Difficulty.Easy;
     GameState state = GameState.Menu;
     int menuOption = 0;
+    double countdownTimer ;
+
 
 
     public void resetgame(){
@@ -1037,13 +1052,17 @@ public class RunningMario_completed extends GameEngine{
         menubackground2 = loadImage("menubackground2.png");
         Chomperopen = loadImage("Chomperopen.png");
         Chomperclose = loadImage("Chomperclose.png");
+        KeyButtons = loadImage("keybuttons.png");
         Tube = subImage(sheet2,0,145,35,35);
         for (int i = 0; i < 4; i++) {
             frames[i] = subImage(sheet,16*i,0,16,16);
         }
-        for (int i = 0; i < 4; i++) {
-            bigframes[i] = subImage(sheet3_Enemy, i * 16,28,17,32);
-        }
+
+        bigframes[0] = subImage(sheet3_Enemy, 1,28,16,32);
+        bigframes[1] = subImage(sheet3_Enemy, 17,28,16,32);
+        bigframes[2] = subImage(sheet3_Enemy, 33,28,14,32);
+        bigframes[3] = subImage(sheet3_Enemy, 49,28,16,32);
+
         flag = subImage(flag,0,0,681,457);
         flagpole = subImage(flagpole,0,0,143,790);
         castle = subImage(castle,0,25,405,500);
@@ -1061,7 +1080,7 @@ public class RunningMario_completed extends GameEngine{
         flagMario = subImage(sheet,128,0,16,16);
         flagMario1 = subImage(sheet3_Enemy,130,28,14,32);
         jumpMario = subImage(sheet,80,0,16,16);
-        jumpMario1 = subImage(sheet3_Enemy, 80,28,18,32);
+        jumpMario1 = subImage(sheet3_Enemy, 81,28,15,32);
         for(int i = 0; i < 2;i++){
             Chestnut[i] = subImage(sheet3_Enemy,227 + i * 16,11,16,17);
         }
@@ -1075,6 +1094,7 @@ public class RunningMario_completed extends GameEngine{
         TurtleDie = subImage(sheet3_Enemy,402,19,16,35);
 
             mushroom = subImage(sheet3_Enemy,434 ,29,35,35);
+
 
 
         groundPosition = 550 - 38;
@@ -1094,6 +1114,27 @@ public class RunningMario_completed extends GameEngine{
         // Update Function
         animTime += dt;
 
+
+//        if (difficulty == Difficulty.Easy){
+//            countdownTimer = 120;
+//
+//        } else if (difficulty == Difficulty.Medium) {
+//            countdownTimer = 90;
+//        } else if (difficulty == Difficulty.Hard) {
+//            countdownTimer = 60;
+//        }
+
+        if (state == GameState.Play){
+
+            countdownTimer -= dt;
+            if (countdownTimer <= 0) {
+                countdownTimer = 0;
+                // 触发游戏结束事件
+                animatemario();
+                is_dead = true;
+                gameover = true;
+            }
+        }
         checkCollision();
 
         if (is_dead){
@@ -1132,6 +1173,8 @@ public class RunningMario_completed extends GameEngine{
                 currentFrame1 = getFrame(0.3, 4);
             }
 
+
+//            System.out.println(pos.getX());
         } else {
             if (!Tobebig){
                 currentFrame = 0;
@@ -1230,7 +1273,7 @@ public class RunningMario_completed extends GameEngine{
         } else if(state == GameState.Play) {
             // Show Game
             drawGame();
-            if (pos.getX()>4620 && pos.getX()<6700) {
+            if (pos.getX()>4620 && pos.getX()<6900) {
                 is_Desert = true;
                 is_Default = false;
                 is_SkyCity = false;
@@ -1249,6 +1292,9 @@ public class RunningMario_completed extends GameEngine{
             // Show Options Menu
             drawImage(menubackground2,0,0,800,645);
             drawCodex();
+        } else if (state == GameState.Options) {
+            drawImage(menubackground2,0,0,800,645);
+            drawOptions();
         }
 
     }
@@ -1545,12 +1591,14 @@ public class RunningMario_completed extends GameEngine{
             }
             changeColor(green);
             drawBoldText(50,50,"score:"+score,"Arial", 30);
+            drawBoldText(200,50,"Remaining time"+ String.format("%.1f", countdownTimer),"Arial",30);
         }else if(!gameover && is_Todraw){
             drawImage(winpicture,0,0,800,645);
             changeColor(white);
             drawBoldText(80, 300, "YOU       WIN!", "Arial", 100);
             drawText(60, 500, "Press Space to quit the game!", "Arial", 50);
         }else{
+            drawImage(menubackground2,0,0,800,645);
             changeColor(white);
             drawBoldText(80, 300, "GAME OVER!", "Arial", 100);
             drawText(60, 500, "Press Space to quit the game!", "Arial", 50);
@@ -1562,7 +1610,7 @@ public class RunningMario_completed extends GameEngine{
     }
     public void drawMenu(){
         if(menuOption == 0) {
-            changeColor(white);
+            changeColor(green);
 //            drawText(200, 350, "Play");
             drawBoldText(200,200,"Play","Arial",80);
             M1 = subImage(sheet,16,0,16,16);
@@ -1592,6 +1640,16 @@ public class RunningMario_completed extends GameEngine{
         } else {
             changeColor(150, 150, 150);
             drawBoldText(200, 400, "Help","Arial",50);
+        }
+
+        if(menuOption == 3) {
+            changeColor( white);
+            drawBoldText(200, 520, "Options","Arial",80);
+            M1 = subImage(sheet,16,0,16,16);
+            drawImage(M1, 100, 450, 100, 100);
+        } else {
+            changeColor(150, 150, 150);
+            drawBoldText(200, 500, "Options","Arial",50);
         }
     }
 
@@ -1645,6 +1703,14 @@ public class RunningMario_completed extends GameEngine{
             changeColor(150, 150, 150);
             drawBoldText(300,370,"Coins ","Arial",50);
             drawImage(coinsAppear[getFrame(0,0)],320,400,100,100);
+        }if(menuOption == 5) {
+            changeColor( green);
+            drawBoldText(450,370,"BigMario ","Arial",50);
+            drawImage(bigframes[getFrame(1,3)],480,400,100,200);
+        } else {
+            changeColor(150, 150, 150);
+            drawBoldText(450,370,"BigMario ","Arial",50);
+            drawImage(bigframes[getFrame(0,0)],480,400,100,200);
         }
 
 
@@ -1655,17 +1721,78 @@ public class RunningMario_completed extends GameEngine{
 
 
 
-
-
-
-
-
     }
 
     public void drawHelp(){
-        changeColor(green);
-        drawBoldText(100,100,"Help Text","Arial",20);
+        changeColor(yellow);
+        drawBoldText(30,100,"Control buttons:","Arial" ,20);
+        drawBoldText(30,150,"Left: Control Mario to walk left","Arial" ,20);
+        drawBoldText(30,200,"Right: Control Mario to walk to the right","Arial" ,20);
+        drawBoldText(30,250,"You need to avoid contact with monsters left and right, ","Arial" ,20);
+        drawBoldText(30,300,"of course, you can defeat them by jumping and stomping on them.","Arial" ,20);
+        drawBoldText(30,350,"Defeating monsters and lifting up treasure chests can both increase your points.","Arial" ,20);
+        drawBoldText(30,400,"Some treasure chests may contain mushrooms, ","Arial" ,20);
+        drawBoldText(30,450,"and eating them can turn you into a big Mario","Arial" ,20);
+        drawImage(KeyButtons,30,500,200,150);
     }
+
+    public void drawOptions() {
+        // Easy
+        if(menuOption == 0) {
+            changeColor(white);
+            drawBoldText(50, 150, "Easy  - 120S to finish the game", "Arial", 50);
+            drawImage(M1, 0, 100, 50, 50);
+        } else {
+            if(difficulty == Difficulty.Easy) {
+                changeColor(200, 200, 200);
+                drawBoldText(50, 150, "Easy  - 120S to finish the game", "Arial", 50);
+            } else {
+                changeColor(150, 150, 150);
+                drawBoldText(50, 150, "Easy  - 120S to finish the game", "Arial", 50);
+            }
+        }
+
+        // Medium
+        if(menuOption == 1) {
+            changeColor(white);
+            drawText(50, 250, "Medium - 90S to finish the game", "Arial", 50);
+            drawImage(M1, 0, 200, 50, 50);
+        } else {
+            if(difficulty == Difficulty.Medium) {
+                changeColor(200, 200, 200);
+                drawText(50, 250, "Medium - 90S to finish the game", "Arial", 50);
+            } else {
+                changeColor(150, 150, 150);
+                drawText(50, 250, "Medium - 90S to finish the game", "Arial", 50);
+            }
+        }
+
+        // Hard
+        if(menuOption == 2) {
+            changeColor(white);
+            drawText(50, 350, "Hard      - 60S to finish the game", "Arial", 50);
+            drawImage(M1, 0, 300, 50, 50);
+        } else {
+            if(difficulty == Difficulty.Hard) {
+                changeColor(200, 200, 200);
+                drawText(50, 350, "Hard      - 60S to finish the game", "Arial", 50);
+            } else {
+                changeColor(150, 150, 150);
+                drawText(50, 350, "Hard      - 60S to finish the game", "Arial", 50);
+            }
+        }
+
+        // Back
+        if(menuOption == 3) {
+            changeColor(white);
+            drawText(50, 450, "Back");
+            drawImage(M1, 0, 400, 50, 50);
+        } else {
+            changeColor(150, 150, 150);
+            drawText(50, 450, "Back");
+        }
+    }
+
 
     public void drawWin(){
 
@@ -1705,6 +1832,8 @@ public class RunningMario_completed extends GameEngine{
             keyPressedHelp(e);
         } else if (state == GameState.Codex) {
             keyPressedCodex(e);
+        } else if (state == GameState.Options) {
+            keyPressedOptions(e);
         }
 
     }
@@ -1791,6 +1920,8 @@ public class RunningMario_completed extends GameEngine{
 
             } else if (menuOption ==2) {
                 state = GameState.Help;
+            } else if (menuOption ==3) {
+                state = GameState.Options;
             }
 
         }
@@ -1800,19 +1931,19 @@ public class RunningMario_completed extends GameEngine{
         // Move up in the menu
         if(e.getKeyCode() == KeyEvent.VK_LEFT) {
             // Add code to move up the menu
-            if(menuOption<=3){
+            if(menuOption<=5){
                 menuOption--;
             }else {
-                menuOption = 3;
+                menuOption = 5;
             }
         }
         // Move down in the menu
         if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
             // Add code to move down the menu
-            if(menuOption<=3){
+            if(menuOption<=5){
                 menuOption++;
             }else {
-                menuOption = 3;
+                menuOption = 5;
             }
         }
         // Select an item
@@ -1830,6 +1961,52 @@ public class RunningMario_completed extends GameEngine{
             state = GameState.Menu;
         }
     }
+
+    public void keyPressedOptions(KeyEvent e) {
+        // Move up in the menu
+        if(e.getKeyCode() == KeyEvent.VK_UP) {
+            // Add code to move up the menu
+            if(menuOption<=3){
+                menuOption--;
+            }else {
+                menuOption = 3;
+            }
+        }
+        // Move down in the menu
+        if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+            // Add code to move down the menu
+            if(menuOption<=3){
+                menuOption++;
+            }else {
+                menuOption = 3;
+            }
+        }
+        // Select an item
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            // Add code to change difficulty or
+            // return to the main menu
+            if (menuOption==0){
+
+                state = GameState.Play;
+                difficulty = Difficulty.Easy;
+                countdownTimer = 120;
+            } else if (menuOption ==1) {
+
+                state = GameState.Play;
+                difficulty = Difficulty.Medium;
+                countdownTimer = 90;
+            } else if (menuOption ==2) {
+
+                state = GameState.Play;
+                difficulty = Difficulty.Hard;
+                countdownTimer = 60;
+            } else if (menuOption ==3) {
+                state = GameState.Menu;
+            }
+
+        }
+    }
+
 
     public void keyReleasedGame(KeyEvent e){
         if (is_dead){
