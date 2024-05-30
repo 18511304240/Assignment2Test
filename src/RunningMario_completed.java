@@ -154,6 +154,9 @@ public class RunningMario_completed extends GameEngine{
         enemyTests.add(new EnemyTest(2500,groundPosition,1,2,true));
         enemyTests.add(new EnemyTest(2100,groundPosition,1,2,false));
         enemyTests.add(new EnemyTest(2300,groundPosition,2,2,true));
+        for (int i=0;i<6;i++){
+            enemyTests.add(new EnemyTest(7920+i*200,435,4,0,false));
+        }
     }
 
     int dieTime = 40;
@@ -172,6 +175,8 @@ public class RunningMario_completed extends GameEngine{
                     }
                 }else if (enemyTests.get(i).getType()==3){
                     drawImage(mushroom,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),70,70);
+                }else if (enemyTests.get(i).getType()==4){
+                    drawImage(Chomper[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                 }
 
 
@@ -209,10 +214,10 @@ public class RunningMario_completed extends GameEngine{
     //-------------------------------------------------------
     // Your Program
     //-------------------------------------------------------
-    Image sheet,sheet2,sheet3_Enemy,zhuan1,M1,G1,mushroom,flag,flagpole,castle,winpicture;
+    Image sheet,sheet2,sheet3_Enemy,zhuan1,M1,G1,mushroom,flag,flagpole,castle,winpicture,Chomperopen,Chomperclose,flower;
     Image background,MarioDesert,MarioSkyCity;
     Image menubackground1,menubackground2;
-    Image[] frames,blockQuestion,coinsAppear,Chestnut,Turtle,bigframes;
+    Image[] frames,blockQuestion,coinsAppear,Chestnut,Turtle,bigframes,Chomper;
     Image jumpMario,deadMario,jumpMario1,flagMario;
     Image ChestnutDie,TurtleDie;
     Image block,Tube,block2,zhuan2;
@@ -229,7 +234,7 @@ public class RunningMario_completed extends GameEngine{
     boolean is_Desert = false;
     boolean is_SkyCity = false;
     boolean is_Default = true;
-    int n =0,n1=0;
+    int n =0,n1=0,n2=0;
 
 
     Obstacle tempObstacle;
@@ -251,7 +256,7 @@ public class RunningMario_completed extends GameEngine{
 
 //        blockList.add(new Obstacle(690,350,6));
 
-        blockList.add(new Obstacle(690,390,2));
+        blockList.add(new Obstacle(690,390,11));
         blockList.add(new Obstacle(730,390,1));
         blockList.add(new Obstacle(770,390,2));
         blockList.add(new Obstacle(810,390,1));
@@ -498,6 +503,10 @@ public class RunningMario_completed extends GameEngine{
             }
             else if (o.getType() ==10){
                 drawImage(castle,o.getX(),o.getY(),400,400);
+            }else if (o.getType() ==11){
+                drawImage(blockQuestion[getFrame(1,3)],o.getX(),o.getY(),40,40);
+            }else if (o.getType() ==12){
+                drawImage(flower,o.getX(),o.getY(),30,30);
             }
         }
     }
@@ -529,7 +538,6 @@ public class RunningMario_completed extends GameEngine{
                             break;
                         }
                     }
-                }if (s.getType() == 8 ||s.getType() == 9) {
                 }
                 if (s.getType() == 8 ||s.getType() == 9) {
                 if (pos.getX() + 10 == s.getX() && s.getY() < pos.getY() + 10) {
@@ -544,7 +552,13 @@ public class RunningMario_completed extends GameEngine{
                     break;
                 }
                 }
-                if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5 || s.getType() == 7) {
+                 if (s.getType() == 12) {
+                     if (pos.getX() + 20 > s.getX() && pos.getX() - 20 < s.getX() && s.getY() < pos.getY() + 20 && s.getY() > pos.getY() - 20) {
+                         score = score + 1000;
+                         blockList.remove(i);
+                     }
+                }
+                if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5 || s.getType() == 7 || s.getType() == 11) {
                     if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()) {
                         is_right = false;
                     } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(pos.getY() - (s.getY() + 40)) < 10) {
@@ -572,11 +586,16 @@ public class RunningMario_completed extends GameEngine{
                             is_Flying = true;
                             animateBox(s);
                             enemyTests.add(new EnemyTest(s.getX(),s.getY()-45,3,2,true));
-                        } else if (s.getType() == 5) {
+                        }  else if (s.getType() == 5) {
                             is_jump = false;
                             is_Flying = true;
                             blockList.remove(i);
-                        } else if (s.getType() ==4 ) {
+                        }else if (s.getType() == 11) {
+                            is_jump = false;
+                            is_Flying = true;
+                            s.setType(4);
+                            blockList.add(new Obstacle(690,360,12));
+                        }else if (s.getType() ==4 ) {
                             is_jump = false;
                             is_Flying = true;
                         }
@@ -930,6 +949,7 @@ public class RunningMario_completed extends GameEngine{
 
     }
 
+
     private void animateTurtle(EnemyTest turtle) {
         final int riseDistance = 20;
         final int fallSpeed = 10;
@@ -1007,8 +1027,10 @@ public class RunningMario_completed extends GameEngine{
         bigframes = new Image[4];
         blockQuestion = new Image[3];
         coinsAppear = new Image[3];
-        Chestnut = new Image[4];
+        Chestnut = new Image[2];
+        Chomper = new Image[2];
         Turtle = new Image[2];
+        flower = loadImage("flower.png");
         sheet = loadImage("miniMario.png");
         sheet2 = loadImage("Obstacle.png");
         zhuan1 = loadImage("zhuan1.png");
@@ -1026,6 +1048,8 @@ public class RunningMario_completed extends GameEngine{
         menubackground1 = loadImage("menubackground1.png");
         winpicture = loadImage("win.jpg");
         menubackground2 = loadImage("menubackground2.png");
+        Chomperopen = loadImage("Chomperopen.png");
+        Chomperclose = loadImage("Chomperclose.png");
         Tube = subImage(sheet2,0,145,35,35);
         for (int i = 0; i < 4; i++) {
             frames[i] = subImage(sheet,16*i,0,16,16);
@@ -1039,6 +1063,7 @@ public class RunningMario_completed extends GameEngine{
         block = subImage(sheet2,34,0,17,17);
         block2 = subImage(sheet2,0,18,17,17);
         zhuan2 = subImage(zhuan1,0,0,30,30);
+        flower = subImage(flower,0,0,47,47);
         for(int i = 0; i < 3; i++){
             blockQuestion[i] = subImage(sheet2,432 + 18 * i,0,17,17);
         }
@@ -1052,6 +1077,9 @@ public class RunningMario_completed extends GameEngine{
         for(int i = 0; i < 2;i++){
             Chestnut[i] = subImage(sheet3_Enemy,227 + i * 16,11,16,17);
         }
+            Chomper[0] = subImage(Chomperopen,0,0,104,143);
+        Chomper[1] = subImage(Chomperclose,0,4,102,150);
+
         for(int i = 0; i < 2;i++){
             Turtle[i] = subImage(sheet3_Enemy,338 + i * 16,29,16,35);
         }
@@ -1063,9 +1091,9 @@ public class RunningMario_completed extends GameEngine{
 
         groundPosition = 550 - 38;
         pos.setLocation(100,groundPosition);
-
-        designObstacle();
         designEnemy();
+        designObstacle();
+
 
     }
 
@@ -1251,8 +1279,8 @@ public class RunningMario_completed extends GameEngine{
                     }else if (!is_Default && !is_Desert && is_SkyCity){
                         drawImage(MarioSkyCity, 0, 0, 10500, 645);
                     }
-                    drawObstacle();
                     drawEnemy();
+                    drawObstacle();
                     restoreLastTransform();
                     if(is_dead){
                         drawImage(deadMario, pos.getX() + 20 * 2, pos.getY(), 20 * 2, 20 * 2);
@@ -1310,8 +1338,9 @@ public class RunningMario_completed extends GameEngine{
                     }else if (!is_Default && !is_Desert && is_SkyCity){
                         drawImage(MarioSkyCity, 0, 0, 10500, 645);
                     }
-                    drawObstacle();
                     drawEnemy();
+                    drawObstacle();
+
                     timeElapsed++;
                     restoreLastTransform();
                     if(is_dead){
@@ -1368,8 +1397,9 @@ public class RunningMario_completed extends GameEngine{
                         drawImage(MarioSkyCity, 0, 0, 10500, 645);
                     }
                     drawImage(block,obstaclePos.getX(),obstaclePos.getY());
-                    drawObstacle();
                     drawEnemy();
+                    drawObstacle();
+
                     restoreLastTransform();
                     if(is_dead){
                         drawImage(deadMario, pos.getX(), pos.getY(), 20 * 2, 20 * 2);
@@ -1651,7 +1681,7 @@ public class RunningMario_completed extends GameEngine{
     }
     public void keyPressedGame(KeyEvent e){
 
-        if (is_dead||is_win){
+        if (is_dead||is_win||is_down||is_finish){
             is_moving = false;
             is_left = false;
             is_right = false;
