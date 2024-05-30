@@ -1131,9 +1131,9 @@ public class RunningMario_completed extends GameEngine{
             mushroom = subImage(sheet3_Enemy,434 ,29,35,35);
 
 
-//        Tobebig =true;
+        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(2700,groundPosition);
+        pos.setLocation(9000,groundPosition);
 
         designObstacle();
         designEnemy();
@@ -1353,7 +1353,7 @@ public class RunningMario_completed extends GameEngine{
                                 drawImage(flagMario, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 2);
                                 System.out.println("1");
                             }else {
-                                drawImage(flagMario1, pos.getX() + 50, pos.getY(), 20 * 4, 20 * 4);
+                                drawImage(flagMario1, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 4);
                             }
                         }else{
                             is_left = false;
@@ -1368,9 +1368,9 @@ public class RunningMario_completed extends GameEngine{
                                 }
                             }else {
                                 if (!is_finish) {
-                                    drawImage(bigframes[getFrame(0.3, 2)], pos.getX() + 60, groundPosition, 80, 80);
+                                    drawImage(bigframes[getFrame(0.3, 2)], pos.getX() + 60, groundPosition-20, 40, 80);
                                 } else {
-                                    drawImage(bigframes[currentFrame1], pos.getX() + 60, pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], pos.getX() + 60, pos.getY(), -20 * 2, 20 * 4);
                                 }
                             }
 
@@ -1397,7 +1397,7 @@ public class RunningMario_completed extends GameEngine{
                                 System.out.println("4");
                                 drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
                             }else {
-                                drawImage(bigframes[currentFrame1], pos.getX() + 20 * 2 , pos.getY(), -20 * 4, 20 * 4);
+                                drawImage(bigframes[currentFrame1], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 4);
                             }
 
                         }
@@ -1430,7 +1430,7 @@ public class RunningMario_completed extends GameEngine{
                                 System.out.println("5");
                                 drawImage(flagMario, 250 + 50, pos.getY(), 20 * 2, 20 * 2);
                             }else {
-                                drawImage(flagMario1, 250 + 50, pos.getY(), 20 * 4, 20 * 4);
+                                drawImage(flagMario1, 250 + 50, pos.getY(), 20 * 2, 20 * 4);
                             }
                         }else{
                             is_left = false;
@@ -1445,9 +1445,9 @@ public class RunningMario_completed extends GameEngine{
                                 }
                             }else {
                                 if (!is_finish) {
-                                    drawImage(bigframes[getFrame(0.3, 2)], 250 + 110, groundPosition, 80, 80);
+                                    drawImage(bigframes[getFrame(0.3, 2)], 250 + 110, groundPosition-20, 40, 80);
                                 } else {
-                                    drawImage(bigframes[currentFrame1], 250 + 110, pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], 250 + 110, pos.getY(), -20 * 2, 20 * 4);
                                 }
                             }
 //                            drawImage(frames[getFrame(0.3,2)],250+130,groundPosition,40,40);
@@ -1501,7 +1501,7 @@ public class RunningMario_completed extends GameEngine{
                                 drawImage(flagMario, pos.getX()+10, pos.getY(), 20 * 2, 20 * 2);
                             }
                             else {
-                                drawImage(flagMario1, pos.getX()+10, pos.getY(), 20 * 4, 20 * 4);
+                                drawImage(flagMario1, pos.getX()+10, pos.getY(), 20 * 2, 20 * 4);
                             }
                         }else{
 
@@ -1517,9 +1517,9 @@ public class RunningMario_completed extends GameEngine{
                                 }
                             }else {
                                 if (!is_finish){
-                                    drawImage(bigframes[getFrame(0.3,2)],pos.getX()+70,groundPosition,80,80);
+                                    drawImage(bigframes[getFrame(0.3,2)],pos.getX()+70,groundPosition-20,40,80);
                                 }else {
-                                    drawImage(bigframes[currentFrame1], pos.getX() + 70 , pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], pos.getX() + 70 , pos.getY(), -20 * 2, 20 * 4);
                                 }
                             }
 
@@ -1578,7 +1578,7 @@ public class RunningMario_completed extends GameEngine{
                             if (!Tobebig){
                                 drawImage(flagMario, 250+10, pos.getY(), 20 * 2, 20 * 2);
                             }else {
-                                drawImage(flagMario1, 250+10, pos.getY(), 20 * 4, 20 * 4);
+                                drawImage(flagMario1, 250+10, pos.getY(), 20 * 2, 20 * 4);
                             }
 
                         }else{
@@ -1594,9 +1594,9 @@ public class RunningMario_completed extends GameEngine{
                                 }
                             }else {
                                 if (!is_finish){
-                                    drawImage(bigframes[getFrame(0.3,2)],250+70,groundPosition,80,80);
+                                    drawImage(bigframes[getFrame(0.3,2)],250+70,groundPosition-20,40,80);
                                 }else {
-                                    drawImage(bigframes[currentFrame1], 250+70 , pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], 250+70 , pos.getY(), -20 * 2, 20 * 4);
                                 }
                             }
 
