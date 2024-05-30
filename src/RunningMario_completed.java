@@ -574,7 +574,7 @@ public class RunningMario_completed extends GameEngine{
                 }
                 }
                 //岩浆与冰块的碰撞检测
-                if (s.getType() == 10 ||s.getType() == 11){
+                if (s.getType() == 13 ||s.getType() == 14){
                     if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(s.getY() - (pos.getY() + 40)) < 10){
                         is_dead = true;
                     }
@@ -1133,9 +1133,9 @@ public class RunningMario_completed extends GameEngine{
             mushroom = subImage(sheet3_Enemy,434 ,29,35,35);
 
 
-
+//        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(9000,groundPosition);
+        pos.setLocation(1000,groundPosition);
 
         designObstacle();
         designEnemy();
