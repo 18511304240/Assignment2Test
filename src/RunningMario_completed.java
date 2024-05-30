@@ -174,7 +174,7 @@ public class RunningMario_completed extends GameEngine{
                         drawImage(TurtleDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                     }
                 }else if (enemyTests.get(i).getType()==3){
-                    drawImage(mushroom,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),70,70);
+                    drawImage(mushroom,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),50,50);
                 }else if (enemyTests.get(i).getType()==4){
                     drawImage(Chomper[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                 }
@@ -572,14 +572,6 @@ public class RunningMario_completed extends GameEngine{
                             is_Flying = true;
                             animateBox(s);
                             blockList.add(new Obstacle(s.getX(),s.getY()-50,6));
-//                            coinTimer.schedule(new TimerTask() {
-//                                @Override
-//                                public void run() {
-//                                    // 两秒后执行的操作
-//                                    blockList.remove(coinsAppear);
-//                                    coinTimer.cancel(); // 取消计时器
-//                                }
-//                            }, 2000); // 2000 毫秒即为两秒
                             displayCoins();
                         }else if (s.getType() == 7) {
                             is_jump = false;
@@ -688,15 +680,10 @@ public class RunningMario_completed extends GameEngine{
 
                     }
                 }
-                if (!is_Flying && pos.getY() +40 > enemyTests.get(i).getY() &&pos.getY() < enemyTests.get(i).getY()+40 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40){
-                    if (enemyTests.get(i).getType()==3){
-                        Tobebig = true;
-                        Turnback = true;
-                        enemyTests.remove(enemyTests.get(i));
-                    }
-                }
 
-            }
+
+
+                }
 
 
         }
@@ -777,7 +764,7 @@ public class RunningMario_completed extends GameEngine{
 
         Thread animationThread = new Thread(() -> {
             int currentY = k.getY();
-            int targetY = groundPosition-22;
+            int targetY = groundPosition;
 
             // Drop the enemy
             while (k.getY() < targetY) {
