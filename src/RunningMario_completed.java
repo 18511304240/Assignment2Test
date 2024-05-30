@@ -592,7 +592,7 @@ public class RunningMario_completed extends GameEngine{
                      }
                 }
                 if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5 || s.getType() == 7 || s.getType() == 11) {
-                    if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()) {
+                    if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 > s.getX() && pos.getX() - 40 < s.getX() ) {
                         is_right = false;
                     } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(pos.getY() - (s.getY() + 40)) < 10) {
                         if (s.getType() == 1) {
@@ -605,14 +605,6 @@ public class RunningMario_completed extends GameEngine{
                             is_Flying = true;
                             animateBox(s);
                             blockList.add(new Obstacle(s.getX(),s.getY()-50,6));
-//                            coinTimer.schedule(new TimerTask() {
-//                                @Override
-//                                public void run() {
-//                                    // 两秒后执行的操作
-//                                    blockList.remove(coinsAppear);
-//                                    coinTimer.cancel(); // 取消计时器
-//                                }
-//                            }, 2000); // 2000 毫秒即为两秒
                             displayCoins();
                         }else if (s.getType() == 7) {
                             is_jump = false;
@@ -1141,7 +1133,7 @@ public class RunningMario_completed extends GameEngine{
 
 //        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(1000,groundPosition);
+        pos.setLocation(2700,groundPosition);
 
         designObstacle();
         designEnemy();
