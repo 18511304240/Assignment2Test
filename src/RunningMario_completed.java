@@ -576,7 +576,12 @@ public class RunningMario_completed extends GameEngine{
                 //岩浆与冰块的碰撞检测
                 if (s.getType() == 13 ||s.getType() == 14){
                     if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(s.getY() - (pos.getY() + 40)) < 10){
-                        is_dead = true;
+                        if (!Tobebig){
+                            is_dead = true;
+                        }else {
+                            Tobebig = false;
+                        }
+
                     }
                 }
 
@@ -587,7 +592,7 @@ public class RunningMario_completed extends GameEngine{
                      }
                 }
                 if (s.getType() == 1 || s.getType() == 2 || s.getType() == 4 || s.getType() == 5 || s.getType() == 7 || s.getType() == 11) {
-                    if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 == s.getX()) {
+                    if (pos.getY() < s.getY() + 40 && pos.getY() > s.getY() - 40 && pos.getX() + 40 > s.getX() && pos.getX() - 40 < s.getX() ) {
                         is_right = false;
                     } else if (pos.getX() + 40 > s.getX() && pos.getX() < s.getX() + 40 && Math.abs(pos.getY() - (s.getY() + 40)) < 10) {
                         if (s.getType() == 1) {
@@ -650,8 +655,6 @@ public class RunningMario_completed extends GameEngine{
                         on_obstacle = false;
                         is_Flying = true;
                     } else if ((pos.getX() + 40) < tempObstacle.getX()) {
-                        System.out.println(pos.getX());
-                        System.out.println(tempObstacle.getX());
                         on_obstacle = false;
                         is_Flying = true;
                     } else if (is_jump) {
@@ -662,8 +665,6 @@ public class RunningMario_completed extends GameEngine{
                         on_obstacle = false;
                         is_Flying = true;
                     } else if ((pos.getX() + 40) < tempObstacle.getX()) {
-                        System.out.println(pos.getX());
-                        System.out.println(tempObstacle.getX());
                         on_obstacle = false;
                         is_Flying = true;
                     } else if (is_jump) {
@@ -704,14 +705,11 @@ public class RunningMario_completed extends GameEngine{
                 }
                 if (!is_Flying && pos.getY() == enemyTests.get(i).getY() && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
                     if (enemyTests.get(i).isLive) {
-
                             if (!Turnback) {
                                 is_dead = true;
-                                System.out.println("2");
                             } else {
                                 Tobebig = false;
                                 timerturnback();
-                                System.out.println("3");
                             }
 
 
@@ -723,7 +721,15 @@ public class RunningMario_completed extends GameEngine{
                         pos.setLocation(pos.getX(), pos.getY() - 40);
                         Turnback = true;
                         enemyTests.remove(enemyTests.get(i));
-                        System.out.println("4");
+                    }else
+                    if (Turnback){
+                        Tobebig = false;
+                        if (n2==0){
+                            is_jump = true;
+                            n2++;
+                        }
+                        timerturnback();
+
                     }
                 }
 
@@ -1135,7 +1141,7 @@ public class RunningMario_completed extends GameEngine{
 
 //        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(100,groundPosition);
+        pos.setLocation(1000,groundPosition);
 
         designObstacle();
         designEnemy();
@@ -1227,7 +1233,6 @@ public class RunningMario_completed extends GameEngine{
             } else {
                 upTime += 1;
             }
-            System.out.println(pos.getY());
         }else if(!is_jump && rebound){
             pos.setLocation(pos.getX(), pos.getY() - upV);
             if (upTime == 3) {
@@ -1353,6 +1358,7 @@ public class RunningMario_completed extends GameEngine{
                         if (!is_down){
                             if (!Tobebig){
                                 drawImage(flagMario, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 2);
+                                System.out.println("1");
                             }else {
                                 drawImage(flagMario1, pos.getX() + 50, pos.getY(), 20 * 4, 20 * 4);
                             }
@@ -1362,6 +1368,7 @@ public class RunningMario_completed extends GameEngine{
                             is_win = true;
                             if (!Tobebig) {
                                 if (!is_finish) {
+                                    System.out.println("2");
                                     drawImage(frames[getFrame(0.3, 2)], pos.getX() + 60, groundPosition, 40, 40);
                                 } else {
                                     drawImage(frames[currentFrame], pos.getX() + 60, pos.getY(), -20 * 2, 20 * 2);
@@ -1370,7 +1377,7 @@ public class RunningMario_completed extends GameEngine{
                                 if (!is_finish) {
                                     drawImage(bigframes[getFrame(0.3, 2)], pos.getX() + 60, groundPosition, 80, 80);
                                 } else {
-                                    drawImage(bigframes[currentFrame], pos.getX() + 60, pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], pos.getX() + 60, pos.getY(), -20 * 4, 20 * 4);
                                 }
                             }
 
@@ -1443,7 +1450,7 @@ public class RunningMario_completed extends GameEngine{
                                 if (!is_finish) {
                                     drawImage(bigframes[getFrame(0.3, 2)], 250 + 110, groundPosition, 80, 80);
                                 } else {
-                                    drawImage(bigframes[currentFrame], 250 + 110, pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], 250 + 110, pos.getY(), -20 * 4, 20 * 4);
                                 }
                             }
 //                            drawImage(frames[getFrame(0.3,2)],250+130,groundPosition,40,40);
@@ -1513,7 +1520,7 @@ public class RunningMario_completed extends GameEngine{
                                 if (!is_finish){
                                     drawImage(bigframes[getFrame(0.3,2)],pos.getX()+70,groundPosition,80,80);
                                 }else {
-                                    drawImage(bigframes[currentFrame], pos.getX() + 70 , pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], pos.getX() + 70 , pos.getY(), -20 * 4, 20 * 4);
                                 }
                             }
 
@@ -1588,7 +1595,7 @@ public class RunningMario_completed extends GameEngine{
                                 if (!is_finish){
                                     drawImage(bigframes[getFrame(0.3,2)],250+70,groundPosition,80,80);
                                 }else {
-                                    drawImage(bigframes[currentFrame], 250+70 , pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], 250+70 , pos.getY(), -20 * 4, 20 * 4);
                                 }
                             }
 
@@ -1849,6 +1856,7 @@ public class RunningMario_completed extends GameEngine{
     boolean is_win = false;
     boolean is_finish = false;
     boolean is_Todraw = false;
+    boolean Turnback1 = false;
     int upV;
 
     @Override
