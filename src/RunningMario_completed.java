@@ -258,7 +258,7 @@ public class RunningMario_completed extends GameEngine{
 
 //        blockList.add(new Obstacle(690,350,6));
 
-        blockList.add(new Obstacle(690,390,2));
+        blockList.add(new Obstacle(690,390,11));
         blockList.add(new Obstacle(730,390,1));
         blockList.add(new Obstacle(770,390,2));
         blockList.add(new Obstacle(810,390,1));
@@ -1135,7 +1135,7 @@ public class RunningMario_completed extends GameEngine{
 
 //        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(1000,groundPosition);
+        pos.setLocation(100,groundPosition);
 
         designObstacle();
         designEnemy();
@@ -1622,7 +1622,7 @@ public class RunningMario_completed extends GameEngine{
             }
             changeColor(green);
             drawBoldText(50,50,"score:"+score,"Arial", 30);
-            drawBoldText(200,50,"Remaining time"+ String.format("%.1f", countdownTimer),"Arial",30);
+            drawBoldText(300,50,"Remaining time"+ String.format("%.1f", countdownTimer),"Arial",30);
 
         }else if(!gameover && is_Todraw){
             drawImage(winpicture,0,0,800,645);
