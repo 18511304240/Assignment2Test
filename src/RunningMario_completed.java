@@ -218,7 +218,7 @@ public class RunningMario_completed extends GameEngine{
     Image background,MarioDesert,MarioSkyCity;
     Image menubackground1,menubackground2;
     Image[] frames,blockQuestion,coinsAppear,Chestnut,Turtle,bigframes,Chomper;
-    Image jumpMario,deadMario,jumpMario1,flagMario;
+    Image jumpMario,deadMario,jumpMario1,flagMario,flagMario1;
     Image ChestnutDie,TurtleDie;
     Image block,Tube,block2,zhuan2;
     int groundPosition;
@@ -1059,6 +1059,7 @@ public class RunningMario_completed extends GameEngine{
         }
         deadMario = subImage(sheet,96,0,16,16);
         flagMario = subImage(sheet,128,0,16,16);
+        flagMario1 = subImage(sheet3_Enemy,130,28,14,32);
         jumpMario = subImage(sheet,80,0,16,16);
         jumpMario1 = subImage(sheet3_Enemy, 80,28,18,32);
         for(int i = 0; i < 2;i++){
@@ -1274,15 +1275,27 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else if (is_flag){
                         if (!is_down){
-                            drawImage(flagMario, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 2);
+                            if (!Tobebig){
+                                drawImage(flagMario, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 2);
+                            }else {
+                                drawImage(flagMario1, pos.getX() + 50, pos.getY(), 20 * 4, 20 * 4);
+                            }
                         }else{
                             is_left = false;
                             is_right = true;
                             is_win = true;
-                            if (!is_finish){
-                                drawImage(frames[getFrame(0.3,2)],pos.getX()+60,groundPosition,40,40);
+                            if (!Tobebig) {
+                                if (!is_finish) {
+                                    drawImage(frames[getFrame(0.3, 2)], pos.getX() + 60, groundPosition, 40, 40);
+                                } else {
+                                    drawImage(frames[currentFrame], pos.getX() + 60, pos.getY(), -20 * 2, 20 * 2);
+                                }
                             }else {
-                                drawImage(frames[currentFrame], pos.getX() + 60 , pos.getY(), -20 * 2, 20 * 2);
+                                if (!is_finish) {
+                                    drawImage(bigframes[getFrame(0.3, 2)], pos.getX() + 60, groundPosition, 80, 80);
+                                } else {
+                                    drawImage(bigframes[currentFrame], pos.getX() + 60, pos.getY(), -20 * 4, 20 * 4);
+                                }
                             }
 
 //                            drawImage(frames[getFrame(0.3,2)],pos.getX()+80,groundPosition,40,40);
@@ -1306,7 +1319,7 @@ public class RunningMario_completed extends GameEngine{
                             if (!Tobebig){
                                 drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
                             }else {
-                                drawImage(bigframes[currentFrame1], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 4);
+                                drawImage(bigframes[currentFrame1], pos.getX() + 20 * 2 , pos.getY(), -20 * 4, 20 * 4);
                             }
 
                         }
@@ -1335,17 +1348,28 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else if (is_flag){
                         if (!is_down){
-                            drawImage(flagMario, 250 + 50, pos.getY(), 20 * 2, 20 * 2);
+                            if (!Tobebig) {
+                                drawImage(flagMario, 250 + 50, pos.getY(), 20 * 2, 20 * 2);
+                            }else {
+                                drawImage(flagMario1, 250 + 50, pos.getY(), 20 * 4, 20 * 4);
+                            }
                         }else{
                             is_left = false;
                             is_right = true;
                             is_win = true;
-                            if (!is_finish){
-                                drawImage(frames[getFrame(0.3,2)],250+110,groundPosition,40,40);
+                            if (!Tobebig){
+                                if (!is_finish){
+                                    drawImage(frames[getFrame(0.3,2)],250+110,groundPosition,40,40);
+                                }else {
+                                    drawImage(frames[currentFrame], 250+110 , pos.getY(), -20 * 2, 20 * 2);
+                                }
                             }else {
-                                drawImage(frames[currentFrame], 250+110 , pos.getY(), -20 * 2, 20 * 2);
+                                if (!is_finish) {
+                                    drawImage(bigframes[getFrame(0.3, 2)], 250 + 110, groundPosition, 80, 80);
+                                } else {
+                                    drawImage(bigframes[currentFrame], 250 + 110, pos.getY(), -20 * 4, 20 * 4);
+                                }
                             }
-
 //                            drawImage(frames[getFrame(0.3,2)],250+130,groundPosition,40,40);
 //                            drawImage(frames[currentFrame], 250 + 130, pos.getY(), 20 * 2, 20 * 2);
                         }
@@ -1393,16 +1417,29 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else if (is_flag){
                         if (!is_down){
-
-                            drawImage(flagMario, pos.getX()+10, pos.getY(), 20 * 2, 20 * 2);
+                            if (!Tobebig){
+                                drawImage(flagMario, pos.getX()+10, pos.getY(), 20 * 2, 20 * 2);
+                            }
+                            else {
+                                drawImage(flagMario1, pos.getX()+10, pos.getY(), 20 * 4, 20 * 4);
+                            }
                         }else{
+
                             is_left = false;
                             is_right = true;
                             is_win = true;
-                            if (!is_finish){
-                                drawImage(frames[getFrame(0.3,2)],pos.getX()+70,groundPosition,40,40);
+                            if (!Tobebig){
+                                if (!is_finish){
+                                    drawImage(frames[getFrame(0.3,2)],pos.getX()+70,groundPosition,40,40);
+                                }else {
+                                    drawImage(frames[currentFrame], pos.getX() + 70 , pos.getY(), -20 * 2, 20 * 2);
+                                }
                             }else {
-                                drawImage(frames[currentFrame], pos.getX() + 70 , pos.getY(), -20 * 2, 20 * 2);
+                                if (!is_finish){
+                                    drawImage(bigframes[getFrame(0.3,2)],pos.getX()+70,groundPosition,80,80);
+                                }else {
+                                    drawImage(bigframes[currentFrame], pos.getX() + 70 , pos.getY(), -20 * 4, 20 * 4);
+                                }
                             }
 
 //                            drawImage(frames[getFrame(0.3,2)],pos.getX()+90,groundPosition,40,40);
@@ -1456,16 +1493,30 @@ public class RunningMario_completed extends GameEngine{
                         timereset();
                     }else if (is_flag){
                         if (!is_down){
-                            drawImage(flagMario, 250+10, pos.getY(), 20 * 2, 20 * 2);
+                            if (!Tobebig){
+                                drawImage(flagMario, 250+10, pos.getY(), 20 * 2, 20 * 2);
+                            }else {
+                                drawImage(flagMario1, 250+10, pos.getY(), 20 * 4, 20 * 4);
+                            }
+
                         }else{
                             is_left = false;
                             is_right = true;
                             is_win = true;
-                            if (!is_finish){
-                                drawImage(frames[getFrame(0.3,2)],250+70,groundPosition,40,40);
+                            if (!Tobebig){
+                                if (!is_finish){
+                                    drawImage(frames[getFrame(0.3,2)],250+70,groundPosition,40,40);
+                                }else {
+                                    drawImage(frames[currentFrame], 250+70 , pos.getY(), -20 * 2, 20 * 2);
+                                }
                             }else {
-                                drawImage(frames[currentFrame], 250+70 , pos.getY(), -20 * 2, 20 * 2);
+                                if (!is_finish){
+                                    drawImage(bigframes[getFrame(0.3,2)],250+70,groundPosition,80,80);
+                                }else {
+                                    drawImage(bigframes[currentFrame], 250+70 , pos.getY(), -20 * 4, 20 * 4);
+                                }
                             }
+
 
 //                            drawImage(frames[getFrame(0.3,2)],250+90,groundPosition,40,40);
 //                            drawImage(frames[currentFrame], 250+90, pos.getY(), 20 * 2, 20 * 2);
