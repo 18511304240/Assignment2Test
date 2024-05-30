@@ -1050,7 +1050,7 @@ public class RunningMario_completed extends GameEngine{
 
 
         groundPosition = 550 - 38;
-        pos.setLocation(100,groundPosition);
+        pos.setLocation(9000,groundPosition);
 
         designObstacle();
         designEnemy();
