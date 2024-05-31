@@ -668,7 +668,7 @@ public class RunningMario_completed extends GameEngine{
 
             for (int i = 0, len = enemyTests.size(); i < len; i++) {
                 EnemyTest k = enemyTests.get(i);
-                if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
+                if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40 && pos.getY()+40 > enemyTests.get(i).getY()  ) {
                     if (enemyTests.get(i).isLive) {
                         score += 50;
                         if (enemyTests.get(i).getType() == 2) {
@@ -1131,9 +1131,8 @@ public class RunningMario_completed extends GameEngine{
             mushroom = subImage(sheet3_Enemy,434 ,29,35,35);
 
 
-        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(9000,groundPosition);
+        pos.setLocation(100,groundPosition);
 
         designObstacle();
         designEnemy();
