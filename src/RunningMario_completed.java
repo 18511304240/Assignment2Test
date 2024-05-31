@@ -668,32 +668,40 @@ public class RunningMario_completed extends GameEngine{
 
             for (int i = 0, len = enemyTests.size(); i < len; i++) {
                 EnemyTest k = enemyTests.get(i);
-                if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40 && pos.getY()+40 > enemyTests.get(i).getY()  ) {
+                if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40  ) {
                     if (enemyTests.get(i).isLive) {
-                        score += 50;
-                        if (enemyTests.get(i).getType() == 2) {
-                            if (!enemyTests.get(i).Turtleisdie) {
-                                rebound = true;
-                                enemyTests.get(i).Turtleisdie = true;
-                                if (pos.getX() + 20 < enemyTests.get(i).getNewX()) {
-                                    enemyTests.get(i).isRight = true;
-                                    enemyTests.get(i).v = Math.abs(enemyTests.get(i).v);
-                                } else {
-                                    enemyTests.get(i).isRight = false;
-                                    enemyTests.get(i).v = -Math.abs(enemyTests.get(i).v);
+                        System.out.println("why");
+                        if (enemyTests.get(i).getType() != 4) {
+                            score += 50;
+                            if (enemyTests.get(i).getType() == 2) {
+                                if (!enemyTests.get(i).Turtleisdie) {
+                                    rebound = true;
+                                    enemyTests.get(i).Turtleisdie = true;
+                                    if (pos.getX() + 20 < enemyTests.get(i).getNewX()) {
+                                        enemyTests.get(i).isRight = true;
+                                        enemyTests.get(i).v = Math.abs(enemyTests.get(i).v);
+                                    } else {
+                                        enemyTests.get(i).isRight = false;
+                                        enemyTests.get(i).v = -Math.abs(enemyTests.get(i).v);
+                                    }
+                                } else if (!enemyTests.get(i).isAnimating()) {
+                                    animateTurtle(k);
+                                    rebound = true;
                                 }
-                            } else if (!enemyTests.get(i).isAnimating()) {
-                                animateTurtle(k);
+                            } else {
                                 rebound = true;
+                                enemyTests.get(i).setLive(false);
                             }
-                        } else {
-                            rebound = true;
-                            enemyTests.get(i).setLive(false);
+                        } else if (enemyTests.get(i).getType() == 2 && !enemyTests.get(i).isAnimating()) {
+                            animateTurtle(k);
+                        }else {
+                            if (pos.getY() + 60 > enemyTests.get(i).getY() && pos.getY() -60 < enemyTests.get(i).getY()){
+                                rebound = true;
+                                System.out.println("???");
+                                enemyTests.get(i).setLive(false);
+                            }
                         }
-                    } else if (enemyTests.get(i).getType() == 2 && !enemyTests.get(i).isAnimating()) {
-                        animateTurtle(k);
                     }
-
                 }
                 if (!is_Flying && pos.getY() == enemyTests.get(i).getY() && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
                     if (enemyTests.get(i).isLive) {
@@ -1132,7 +1140,7 @@ public class RunningMario_completed extends GameEngine{
 
 
         groundPosition = 550 - 38;
-        pos.setLocation(100,groundPosition);
+        pos.setLocation(9000,groundPosition);
 
         designObstacle();
         designEnemy();
@@ -1350,7 +1358,6 @@ public class RunningMario_completed extends GameEngine{
                         if (!is_down){
                             if (!Tobebig){
                                 drawImage(flagMario, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 2);
-                                System.out.println("1");
                             }else {
                                 drawImage(flagMario1, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 4);
                             }
@@ -1360,7 +1367,6 @@ public class RunningMario_completed extends GameEngine{
                             is_win = true;
                             if (!Tobebig) {
                                 if (!is_finish) {
-                                    System.out.println("2");
                                     drawImage(frames[getFrame(0.3, 2)], pos.getX() + 60, groundPosition, 40, 40);
                                 } else {
                                     drawImage(frames[currentFrame], pos.getX() + 60, pos.getY(), -20 * 2, 20 * 2);
@@ -1380,7 +1386,6 @@ public class RunningMario_completed extends GameEngine{
                     }else
                     if(is_Flying || is_jump){
                         if (!Tobebig) {
-                            System.out.println("3");
                             drawImage(jumpMario, pos.getX() + 20 * 2, pos.getY(), -20 * 2, 20 * 2);
                         }else {
                             drawImage(jumpMario1, pos.getX() + 20 * 2, pos.getY(), -20 * 4, 20 * 4);
@@ -1393,7 +1398,6 @@ public class RunningMario_completed extends GameEngine{
                             drawImage(flagMario, pos.getX() , pos.getY(), 20 * 2, 20 * 2);
                         }else {
                             if (!Tobebig){
-                                System.out.println("4");
                                 drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
                             }else {
                                 drawImage(bigframes[currentFrame1], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 4);
@@ -1426,7 +1430,6 @@ public class RunningMario_completed extends GameEngine{
                     }else if (is_flag){
                         if (!is_down){
                             if (!Tobebig) {
-                                System.out.println("5");
                                 drawImage(flagMario, 250 + 50, pos.getY(), 20 * 2, 20 * 2);
                             }else {
                                 drawImage(flagMario1, 250 + 50, pos.getY(), 20 * 2, 20 * 4);
@@ -1437,7 +1440,6 @@ public class RunningMario_completed extends GameEngine{
                             is_win = true;
                             if (!Tobebig){
                                 if (!is_finish){
-                                    System.out.println("6");
                                     drawImage(frames[getFrame(0.3,2)],250+110,groundPosition,40,40);
                                 }else {
                                     drawImage(frames[currentFrame], 250+110 , pos.getY(), -20 * 2, 20 * 2);
@@ -1463,7 +1465,6 @@ public class RunningMario_completed extends GameEngine{
                     }else {
 
                         if (!Tobebig){
-                            System.out.println("7");
                             drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
                         }else {
                             drawImage(bigframes[currentFrame1], 250 + 20*2, pos.getY(), -20 * 2, 20 * 4);
@@ -1509,7 +1510,6 @@ public class RunningMario_completed extends GameEngine{
                             is_win = true;
                             if (!Tobebig){
                                 if (!is_finish){
-                                    System.out.println("8");
                                     drawImage(frames[getFrame(0.3,2)],pos.getX()+70,groundPosition,40,40);
                                 }else {
                                     drawImage(frames[currentFrame], pos.getX() + 70 , pos.getY(), -20 * 2, 20 * 2);
@@ -1538,7 +1538,6 @@ public class RunningMario_completed extends GameEngine{
                     }else {
 
                         if (!Tobebig){
-                            System.out.println("9");
                             drawImage(frames[currentFrame], pos.getX(), pos.getY(), 20 * 2, 20 * 2);
                         }else {
                             drawImage(bigframes[currentFrame1], pos.getX(), pos.getY(), 20 * 2, 20 * 4);
@@ -1586,7 +1585,6 @@ public class RunningMario_completed extends GameEngine{
                             is_win = true;
                             if (!Tobebig){
                                 if (!is_finish){
-                                    System.out.println("10");
                                     drawImage(frames[getFrame(0.3,2)],250+70,groundPosition,40,40);
                                 }else {
                                     drawImage(frames[currentFrame], 250+70 , pos.getY(), -20 * 2, 20 * 2);
@@ -1616,7 +1614,6 @@ public class RunningMario_completed extends GameEngine{
 
                     }else {
                         if (!Tobebig){
-                            System.out.println("11");
                             drawImage(frames[currentFrame], 250, pos.getY(), 20 * 2, 20 * 2);
 
                         }else {
