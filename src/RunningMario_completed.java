@@ -1145,9 +1145,9 @@ public class RunningMario_completed extends GameEngine{
             mushroom = subImage(sheet3_Enemy,434 ,29,35,35);
 
 
-        Tobebig =true;
+//        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(9000,groundPosition);
+        pos.setLocation(100,groundPosition);
 
         designObstacle();
         designEnemy();
