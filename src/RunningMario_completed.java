@@ -143,6 +143,13 @@ public class RunningMario_completed extends GameEngine{
             this.y = y;
             return y;
         }
+        public boolean getIsRight() {
+            return isRight;
+        }
+
+        public void setIsRight(boolean isRight) {
+            this.isRight = isRight;
+        }
     }
 
     public void designEnemy(){
@@ -161,6 +168,7 @@ public class RunningMario_completed extends GameEngine{
 
     int dieTime = 40;
     int dieTime2 = 40;
+
     public void drawEnemy(){
         for(int i = 0,len = enemyTests.size();i < len;i++){
             if (enemyTests.get(i).isLive) {
@@ -169,7 +177,12 @@ public class RunningMario_completed extends GameEngine{
                     drawImage(Chestnut[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                 }else if (enemyTests.get(i).getType()==2){
                     if (!enemyTests.get(i).Turtleisdie){
-                        drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                        if (enemyTests.get(i).getIsRight()==true){
+                            drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX()+35,enemyTests.get(i).getY(),-40,40);
+                        }else {
+                            drawImage(Turtle[getFrame(0.3,2)],enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
+                        }
+
                     }else{
                         drawImage(TurtleDie,enemyTests.get(i).getNewX(),enemyTests.get(i).getY(),40,40);
                     }
@@ -1048,18 +1061,10 @@ public class RunningMario_completed extends GameEngine{
 
     // Initialise the Game
     public void init() {
-
-
         setWindowSize(800,645);
-//        if (state == GameState.Play) {
             startAudioLoop(Title, 10);
-
-//        }
         gameover = false;
         is_dead = false;
-
-
-
         upV = 10;
         frames = new Image[4];
         bigframes = new Image[4];
@@ -1141,7 +1146,7 @@ public class RunningMario_completed extends GameEngine{
 
 //        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(1000,groundPosition);
+        pos.setLocation(100,groundPosition);
 
         designObstacle();
         designEnemy();
@@ -1156,17 +1161,6 @@ public class RunningMario_completed extends GameEngine{
     public void update(double dt) {
         // Update Function
         animTime += dt;
-
-
-//        if (difficulty == Difficulty.Easy){
-//            countdownTimer = 120;
-//
-//        } else if (difficulty == Difficulty.Medium) {
-//            countdownTimer = 90;
-//        } else if (difficulty == Difficulty.Hard) {
-//            countdownTimer = 60;
-//        }
-
         if (state == GameState.Play){
 
             countdownTimer -= dt;
@@ -1360,7 +1354,7 @@ public class RunningMario_completed extends GameEngine{
                                 drawImage(flagMario, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 2);
                                 System.out.println("1");
                             }else {
-                                drawImage(flagMario1, pos.getX() + 50, pos.getY(), 20 * 4, 20 * 4);
+                                drawImage(flagMario1, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 4);
                             }
                         }else{
                             is_left = false;
@@ -1434,7 +1428,7 @@ public class RunningMario_completed extends GameEngine{
                             if (!Tobebig) {
                                 drawImage(flagMario, 250 + 50, pos.getY(), 20 * 2, 20 * 2);
                             }else {
-                                drawImage(flagMario1, 250 + 50, pos.getY(), 20 * 4, 20 * 4);
+                                drawImage(flagMario1, 250 + 50, pos.getY(), 20 * 2, 20 * 4);
                             }
                         }else{
                             is_left = false;
@@ -1469,7 +1463,7 @@ public class RunningMario_completed extends GameEngine{
                         if (!Tobebig){
                             drawImage(frames[currentFrame], 250 + 20*2, pos.getY(), -20 * 2, 20 * 2);
                         }else {
-                            drawImage(bigframes[currentFrame1], 250 + 20*2, pos.getY(), -20 * 2, 20 * 4);
+                            drawImage(bigframes[currentFrame1], 250 + 20*2, pos.getY(), -  20 * 2, 20 * 4);
                         }
 
 
@@ -1503,7 +1497,7 @@ public class RunningMario_completed extends GameEngine{
                                 drawImage(flagMario, pos.getX()+10, pos.getY(), 20 * 2, 20 * 2);
                             }
                             else {
-                                drawImage(flagMario1, pos.getX()+10, pos.getY(), 20 * 4, 20 * 4);
+                                drawImage(flagMario1, pos.getX()+10, pos.getY(), 20 * 2, 20 * 4);
                             }
                         }else{
 
@@ -1578,7 +1572,7 @@ public class RunningMario_completed extends GameEngine{
                             if (!Tobebig){
                                 drawImage(flagMario, 250+10, pos.getY(), 20 * 2, 20 * 2);
                             }else {
-                                drawImage(flagMario1, 250+10, pos.getY(), 20 * 4, 20 * 4);
+                                drawImage(flagMario1, 250+10, pos.getY(), 20 * 2, 20 * 4);
                             }
 
                         }else{
