@@ -618,14 +618,6 @@ public class RunningMario_completed extends GameEngine{
                             is_Flying = true;
                             animateBox(s);
                             blockList.add(new Obstacle(s.getX(),s.getY()-50,6));
-//                            coinTimer.schedule(new TimerTask() {
-//                                @Override
-//                                public void run() {
-//                                    // 两秒后执行的操作
-//                                    blockList.remove(coinsAppear);
-//                                    coinTimer.cancel(); // 取消计时器
-//                                }
-//                            }, 2000); // 2000 毫秒即为两秒
                             displayCoins();
                         }else if (s.getType() == 7) {
                             is_jump = false;
@@ -689,30 +681,39 @@ public class RunningMario_completed extends GameEngine{
 
             for (int i = 0, len = enemyTests.size(); i < len; i++) {
                 EnemyTest k = enemyTests.get(i);
-                if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40) {
+                if (is_Flying && enemyTests.get(i).getY() % (pos.getY() + 40) < 15 && pos.getX() + 40 > enemyTests.get(i).getNewX() && pos.getX() < enemyTests.get(i).getNewX() + 40  ) {
                     if (enemyTests.get(i).isLive) {
-                        score += 50;
-                        if (enemyTests.get(i).getType() == 2) {
-                            if (!enemyTests.get(i).Turtleisdie) {
-                                rebound = true;
-                                enemyTests.get(i).Turtleisdie = true;
-                                if (pos.getX() + 20 < enemyTests.get(i).getNewX()) {
-                                    enemyTests.get(i).isRight = true;
-                                    enemyTests.get(i).v = Math.abs(enemyTests.get(i).v);
-                                } else {
-                                    enemyTests.get(i).isRight = false;
-                                    enemyTests.get(i).v = -Math.abs(enemyTests.get(i).v);
+                        System.out.println("why");
+                        if (enemyTests.get(i).getType() != 4) {
+                            score += 50;
+                            if (enemyTests.get(i).getType() == 2) {
+                                if (!enemyTests.get(i).Turtleisdie) {
+                                    rebound = true;
+                                    enemyTests.get(i).Turtleisdie = true;
+                                    if (pos.getX() + 20 < enemyTests.get(i).getNewX()) {
+                                        enemyTests.get(i).isRight = true;
+                                        enemyTests.get(i).v = Math.abs(enemyTests.get(i).v);
+                                    } else {
+                                        enemyTests.get(i).isRight = false;
+                                        enemyTests.get(i).v = -Math.abs(enemyTests.get(i).v);
+                                    }
+                                } else if (!enemyTests.get(i).isAnimating()) {
+                                    animateTurtle(k);
+                                    rebound = true;
                                 }
-                            } else if (!enemyTests.get(i).isAnimating()) {
-                                animateTurtle(k);
+                            } else {
                                 rebound = true;
+                                enemyTests.get(i).setLive(false);
                             }
-                        } else {
-                            rebound = true;
-                            enemyTests.get(i).setLive(false);
+                        } else if (enemyTests.get(i).getType() == 2 && !enemyTests.get(i).isAnimating()) {
+                            animateTurtle(k);
+                        }else {
+                            if (pos.getY() + 60 > enemyTests.get(i).getY() && pos.getY() -60 < enemyTests.get(i).getY()){
+                                rebound = true;
+                                System.out.println("???");
+                                enemyTests.get(i).setLive(false);
+                            }
                         }
-                    } else if (enemyTests.get(i).getType() == 2 && !enemyTests.get(i).isAnimating()) {
-                        animateTurtle(k);
                     }
 
                 }
@@ -1161,6 +1162,18 @@ public class RunningMario_completed extends GameEngine{
     public void update(double dt) {
         // Update Function
         animTime += dt;
+
+
+
+//        if (difficulty == Difficulty.Easy){
+//            countdownTimer = 120;
+//
+//        } else if (difficulty == Difficulty.Medium) {
+//            countdownTimer = 90;
+//        } else if (difficulty == Difficulty.Hard) {
+//            countdownTimer = 60;
+//        }
+
         if (state == GameState.Play){
 
             countdownTimer -= dt;
@@ -1352,7 +1365,6 @@ public class RunningMario_completed extends GameEngine{
                         if (!is_down){
                             if (!Tobebig){
                                 drawImage(flagMario, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 2);
-                                System.out.println("1");
                             }else {
                                 drawImage(flagMario1, pos.getX() + 50, pos.getY(), 20 * 2, 20 * 4);
                             }
@@ -1362,16 +1374,15 @@ public class RunningMario_completed extends GameEngine{
                             is_win = true;
                             if (!Tobebig) {
                                 if (!is_finish) {
-                                    System.out.println("2");
                                     drawImage(frames[getFrame(0.3, 2)], pos.getX() + 60, groundPosition, 40, 40);
                                 } else {
                                     drawImage(frames[currentFrame], pos.getX() + 60, pos.getY(), -20 * 2, 20 * 2);
                                 }
                             }else {
                                 if (!is_finish) {
-                                    drawImage(bigframes[getFrame(0.3, 2)], pos.getX() + 60, groundPosition, 80, 80);
+                                    drawImage(bigframes[getFrame(0.3, 2)], pos.getX() + 60, groundPosition-20, 40, 80);
                                 } else {
-                                    drawImage(bigframes[currentFrame1], pos.getX() + 60, pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], pos.getX() + 60, pos.getY(), -20 * 2, 20 * 4);
                                 }
                             }
 
@@ -1396,7 +1407,7 @@ public class RunningMario_completed extends GameEngine{
                             if (!Tobebig){
                                 drawImage(frames[currentFrame], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 2);
                             }else {
-                                drawImage(bigframes[currentFrame1], pos.getX() + 20 * 2 , pos.getY(), -20 * 4, 20 * 4);
+                                drawImage(bigframes[currentFrame1], pos.getX() + 20 * 2 , pos.getY(), -20 * 2, 20 * 4);
                             }
 
                         }
@@ -1442,9 +1453,9 @@ public class RunningMario_completed extends GameEngine{
                                 }
                             }else {
                                 if (!is_finish) {
-                                    drawImage(bigframes[getFrame(0.3, 2)], 250 + 110, groundPosition, 80, 80);
+                                    drawImage(bigframes[getFrame(0.3, 2)], 250 + 110, groundPosition-20, 40, 80);
                                 } else {
-                                    drawImage(bigframes[currentFrame1], 250 + 110, pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], 250 + 110, pos.getY(), -20 * 2, 20 * 4);
                                 }
                             }
 //                            drawImage(frames[getFrame(0.3,2)],250+130,groundPosition,40,40);
@@ -1512,9 +1523,9 @@ public class RunningMario_completed extends GameEngine{
                                 }
                             }else {
                                 if (!is_finish){
-                                    drawImage(bigframes[getFrame(0.3,2)],pos.getX()+70,groundPosition,80,80);
+                                    drawImage(bigframes[getFrame(0.3,2)],pos.getX()+70,groundPosition-20,40,80);
                                 }else {
-                                    drawImage(bigframes[currentFrame1], pos.getX() + 70 , pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], pos.getX() + 70 , pos.getY(), -20 * 2, 20 * 4);
                                 }
                             }
 
@@ -1587,9 +1598,9 @@ public class RunningMario_completed extends GameEngine{
                                 }
                             }else {
                                 if (!is_finish){
-                                    drawImage(bigframes[getFrame(0.3,2)],250+70,groundPosition,80,80);
+                                    drawImage(bigframes[getFrame(0.3,2)],250+70,groundPosition-20,40,80);
                                 }else {
-                                    drawImage(bigframes[currentFrame1], 250+70 , pos.getY(), -20 * 4, 20 * 4);
+                                    drawImage(bigframes[currentFrame1], 250+70 , pos.getY(), -20 * 2, 20 * 4);
                                 }
                             }
 
