@@ -1100,9 +1100,9 @@ public class RunningMario_completed extends GameEngine{
         for (int i = 0; i < 4; i++) {
             frames[i] = subImage(sheet,16*i,0,16,16);
         }
-        for (int i = 0; i < 4; i++) {
-            bigframes[i] = subImage(sheet3_Enemy, i * 16,28,17,32);
-        }
+//        for (int i = 0; i < 4; i++) {
+//            bigframes[i] = subImage(sheet3_Enemy, i * 16,28,17,32);
+//        }
 
         bigframes[0] = subImage(sheet3_Enemy, 1,28,16,32);
         bigframes[1] = subImage(sheet3_Enemy, 17,28,16,32);
@@ -1145,9 +1145,9 @@ public class RunningMario_completed extends GameEngine{
             mushroom = subImage(sheet3_Enemy,434 ,29,35,35);
 
 
-//        Tobebig =true;
+        Tobebig =true;
         groundPosition = 550 - 38;
-        pos.setLocation(100,groundPosition);
+        pos.setLocation(9000,groundPosition);
 
         designObstacle();
         designEnemy();
